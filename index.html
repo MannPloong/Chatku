@@ -1,20 +1,25 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#075e54">
+<meta name="theme-color" content="#000000">
 <title>Chatku</title>
+<script>try{var t=localStorage.getItem("chatku_theme");document.documentElement.setAttribute("data-theme",t==="light"?"light":"dark")}catch(e){}</script>
 <link id="manifestLink" rel="manifest" href="data:application/json,%7B%7D">
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='110' fill='%23075e54'/%3E%3Cpath d='M256 112c-79.500 0-144 55.800-144 124.600 0 36 17.700 68.400 46 91.100L146 392l66.500-30.700c14.200 3.200 29.200 4.900 43.500 4.900 79.500 0 144-55.800 144-124.600S335.500 112 256 112z' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="data:,">
 <style>
 :root{
-  --g:#075e54; --g2:#128c7e; --g3:#25d366;
-  --bg:#efeae2; --me:#d9fdd3; --them:#ffffff;
-  --txt:#111b21; --sub:#667781; --line:#e9edef; --panel:#ffffff; --head:#075e54;
+  --acc:#4c8dff; --bg:#000000; --panel:#0a0a0c; --head:#101013;
+  --me:#1d4ed8; --them:#1c1c21;
+  --txt:#f2f2f5; --sub:#8e8e99; --line:#23232a; --field:#15151a;
+  color-scheme:dark;
 }
-@media (prefers-color-scheme: dark){
-  :root{ --bg:#0b141a; --me:#005c4b; --them:#202c33; --txt:#e9edef; --sub:#8696a0; --line:#222d34; --panel:#111b21; --head:#202c33; }
+:root[data-theme="light"]{
+  --acc:#2563eb; --bg:#eef0f4; --panel:#ffffff; --head:#ffffff;
+  --me:#2563eb; --them:#ffffff;
+  --txt:#0f172a; --sub:#64748b; --line:#e5e7eb; --field:#f3f4f6;
+  color-scheme:light;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;height:100%;background:var(--panel);color:var(--txt);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
@@ -24,60 +29,85 @@ html,body{margin:0;height:100%;background:var(--panel);color:var(--txt);font-fam
 #screens{flex:1;position:relative;min-height:0}
 .screen{position:absolute;inset:0;display:none;flex-direction:column;background:var(--panel)}
 .screen.active{display:flex}
-header.bar{background:var(--head);color:#fff;display:flex;align-items:center;gap:10px;padding:12px 14px;min-height:58px}
+header.bar{background:var(--head);color:var(--txt);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;padding:12px 14px;min-height:58px}
 header.bar h1{font-size:20px;margin:0;flex:1}
-header.bar .who{font-size:12px;opacity:.8}
-.icon-btn{background:none;border:0;color:#fff;font-size:22px;padding:6px 8px;border-radius:50%;cursor:pointer;line-height:1}
-.icon-btn:active{background:rgba(255,255,255,.15)}
+header.bar .who{font-size:12px;color:var(--sub)}
+.icon-btn{background:none;border:0;color:var(--txt);font-size:22px;padding:6px 8px;border-radius:50%;cursor:pointer;line-height:1}
+.icon-btn:active{background:rgba(128,128,128,.2)}
 input,textarea,button{font-family:inherit}
 input,textarea{font-size:16px}
 .center{flex:1;overflow:auto;padding:28px 22px;display:flex;flex-direction:column;justify-content:center;gap:12px}
-.center h2{margin:0 0 4px;font-size:24px;color:var(--g2)}
+.center h2{margin:0 0 4px;font-size:24px;color:var(--acc)}
 .center p{margin:0;color:var(--sub);font-size:14px;line-height:1.5}
-.field{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--txt);outline:none}
-.field:focus{border-color:var(--g2)}
-.btn{border:0;border-radius:10px;padding:12px 16px;font-size:16px;font-weight:600;cursor:pointer;background:var(--g2);color:#fff}
-.btn.alt{background:transparent;color:var(--g2);border:1px solid var(--g2)}
+.field{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--field);color:var(--txt);outline:none}
+.field:focus{border-color:var(--acc)}
+.field:disabled{opacity:.6}
+.btn{border:0;border-radius:10px;padding:12px 16px;font-size:16px;font-weight:600;cursor:pointer;background:var(--acc);color:#fff}
+.btn.alt{background:transparent;color:var(--acc);border:1px solid var(--acc)}
+.btn.danger{background:transparent;color:#ef4444;border:1px solid #ef4444}
+.btn.sm{padding:8px 14px;font-size:14px}
 .btn:disabled{opacity:.6}
-.err{color:#d93025;font-size:14px;min-height:18px}
-.link{background:none;border:0;color:var(--sub);font-size:12px;text-decoration:underline;cursor:pointer;margin-top:8px}
+.err{color:#ef4444;font-size:14px;min-height:18px}
+.link{background:none;border:0;color:var(--sub);font-size:12px;text-decoration:underline;cursor:pointer;margin-top:8px;padding:0}
 textarea.field{min-height:150px;resize:vertical;font-family:ui-monospace,monospace;font-size:13px}
+
+.pw{position:relative}
+.pw .field{padding-right:50px}
+.eye{position:absolute;right:4px;top:50%;transform:translateY(-50%);background:none;border:0;color:var(--sub);padding:9px;cursor:pointer;display:flex;border-radius:50%}
+.eye:active{background:rgba(128,128,128,.2)}
 
 #chatList{flex:1;overflow:auto}
 .item{display:flex;gap:12px;padding:12px 14px;align-items:center;border-bottom:1px solid var(--line);cursor:pointer}
 .item:active{background:var(--line)}
-.av{width:46px;height:46px;border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;flex:none}
+.av{width:46px;height:46px;border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;flex:none;overflow:hidden}
+.av.big{width:84px;height:84px;font-size:34px}
 .item .mid{flex:1;min-width:0}
 .item .name{font-weight:600;font-size:16px}
 .item .prev{color:var(--sub);font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .item .right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;font-size:12px;color:var(--sub)}
-.dot{width:10px;height:10px;border-radius:50%;background:var(--g3)}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--acc)}
 .empty{color:var(--sub);text-align:center;padding:60px 30px;font-size:15px;line-height:1.6;white-space:pre-line}
-.fab{position:absolute;right:18px;bottom:calc(18px + env(safe-area-inset-bottom));width:56px;height:56px;border-radius:50%;border:0;background:var(--g3);color:#fff;font-size:28px;box-shadow:0 3px 10px rgba(0,0,0,.3);cursor:pointer}
+.fab{position:absolute;right:18px;bottom:calc(18px + env(safe-area-inset-bottom));width:56px;height:56px;border-radius:50%;border:0;background:var(--acc);color:#fff;font-size:28px;box-shadow:0 3px 10px rgba(0,0,0,.4);cursor:pointer}
 
 #chat header.bar{padding-left:6px}
 #chat .av{width:38px;height:38px;font-size:16px}
 #chat .title{flex:1;min-width:0}
 #chat .title b{display:block;font-size:17px}
-#chat .title span{font-size:12px;opacity:.85}
+#chat .title span{font-size:12px;color:var(--sub)}
 #msgs{flex:1;overflow:auto;padding:10px 10px 6px;background:var(--bg);display:flex;flex-direction:column;gap:3px}
-.day{align-self:center;background:var(--panel);color:var(--sub);font-size:12px;padding:3px 10px;border-radius:8px;margin:8px 0}
-.msg{max-width:80%;padding:6px 9px 4px;border-radius:8px;white-space:pre-wrap;word-break:break-word;font-size:15px;line-height:1.35;box-shadow:0 1px 1px rgba(0,0,0,.12)}
-.msg.me{align-self:flex-end;background:var(--me);border-top-right-radius:2px}
-.msg.them{align-self:flex-start;background:var(--them);border-top-left-radius:2px}
+.day{align-self:center;background:var(--them);color:var(--sub);font-size:12px;padding:3px 10px;border-radius:8px;margin:8px 0;box-shadow:0 1px 1px rgba(0,0,0,.2)}
+.msg{max-width:80%;padding:6px 9px 4px;border-radius:12px;white-space:pre-wrap;word-break:break-word;font-size:15px;line-height:1.35;box-shadow:0 1px 1px rgba(0,0,0,.2)}
+.msg.me{align-self:flex-end;background:var(--me);color:#fff;border-top-right-radius:3px}
+.msg.them{align-self:flex-start;background:var(--them);color:var(--txt);border-top-left-radius:3px}
 .msg .meta{float:right;margin:7px 0 0 10px;font-size:11px;color:var(--sub)}
-.hint{margin:auto;color:var(--sub);font-size:14px;text-align:center;padding:20px}
-.composer{display:flex;gap:8px;padding:8px 8px calc(8px + env(safe-area-inset-bottom));background:var(--bg);align-items:flex-end}
-.composer textarea{flex:1;border:0;border-radius:22px;padding:11px 16px;background:var(--panel);color:var(--txt);resize:none;max-height:120px;outline:none;line-height:1.3}
-.send{width:46px;height:46px;border-radius:50%;border:0;background:var(--g2);color:#fff;font-size:20px;cursor:pointer;flex:none}
+.msg.me .meta{color:rgba(255,255,255,.72)}
+.hint{margin:auto;color:var(--sub);font-size:14px;text-align:center;padding:20px;background:var(--them);border-radius:10px}
+.composer{display:flex;gap:8px;padding:8px 8px calc(8px + env(safe-area-inset-bottom));background:var(--head);border-top:1px solid var(--line);align-items:flex-end}
+.composer textarea{flex:1;border:0;border-radius:22px;padding:11px 16px;background:var(--field);color:var(--txt);resize:none;max-height:120px;outline:none;line-height:1.3}
+.send{width:46px;height:46px;border-radius:50%;border:0;background:var(--acc);color:#fff;font-size:20px;cursor:pointer;flex:none}
 
-#modal{position:absolute;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;padding:20px;z-index:20}
-#modal.show{display:flex}
-.card{background:var(--panel);border-radius:14px;padding:20px;width:100%;max-width:380px;display:flex;flex-direction:column;gap:10px}
-.card h3{margin:0}
+.scroll{flex:1;overflow:auto;padding:4px 16px 30px}
+.sec{padding:16px 0;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:10px}
+.sec h3{margin:0;font-size:12px;color:var(--sub);text-transform:uppercase;letter-spacing:.08em}
+.lbl{font-size:13px;color:var(--sub);margin-bottom:-4px}
+.prof{display:flex;align-items:center;gap:16px}
+.prof-actions{display:flex;flex-direction:column;align-items:flex-start;gap:6px}
+.seg{display:flex;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.seg button{flex:1;padding:12px;border:0;background:transparent;color:var(--txt);font-size:15px;cursor:pointer}
+.seg button.on{background:var(--acc);color:#fff;font-weight:600}
+.walls{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.wall{aspect-ratio:3/4;border-radius:10px;border:2px solid var(--line);cursor:pointer;position:relative;overflow:hidden;background:var(--bg)}
+.wall.on{border-color:var(--acc)}
+.wall span{position:absolute;bottom:3px;left:0;right:0;text-align:center;font-size:10px;color:#fff;text-shadow:0 1px 2px #000}
 .row{display:flex;gap:8px}
 .row .btn{flex:1}
-#toast{position:absolute;top:10px;left:50%;transform:translateX(-50%);background:#111b21;color:#fff;padding:9px 14px;border-radius:10px;font-size:14px;z-index:30;display:none;max-width:90%;box-shadow:0 3px 12px rgba(0,0,0,.35)}
+.note{color:var(--sub);font-size:12px;margin:0;line-height:1.5}
+
+#modal{position:absolute;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;padding:20px;z-index:20}
+#modal.show{display:flex}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px;width:100%;max-width:380px;display:flex;flex-direction:column;gap:10px}
+.card h3{margin:0}
+#toast{position:absolute;top:10px;left:50%;transform:translateX(-50%);background:#2a2a31;color:#fff;padding:9px 14px;border-radius:10px;font-size:14px;z-index:30;display:none;max-width:90%;box-shadow:0 3px 12px rgba(0,0,0,.45)}
 #toast.show{display:block}
 </style>
 </head>
@@ -97,7 +127,7 @@ textarea.field{min-height:150px;resize:vertical;font-family:ui-monospace,monospa
         <div class="err" id="cfgErr"></div>
         <button class="btn" id="cfgSave">Simpan dan mulai</button>
         <details style="margin-top:6px">
-          <summary style="cursor:pointer;color:var(--g2);font-size:14px">Aturan Firestore (salin ke Firebase, tab Rules)</summary>
+          <summary style="cursor:pointer;color:var(--acc);font-size:14px">Aturan Firestore (salin ke Firebase, tab Rules)</summary>
           <pre id="rulesBox" style="max-height:220px;overflow:auto;background:var(--line);padding:10px;border-radius:8px;font-size:11px;margin:8px 0"></pre>
           <button class="btn alt" id="rulesCopy" type="button" style="width:100%">Salin aturan</button>
         </details>
@@ -111,7 +141,13 @@ textarea.field{min-height:150px;resize:vertical;font-family:ui-monospace,monospa
         <h2>Masuk atau daftar</h2>
         <p>Pakai username dan password. Teman bisa menambahkan kamu lewat username.</p>
         <input class="field" id="fUser" placeholder="Username (huruf kecil, angka, _)" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" maxlength="21">
-        <input class="field" id="fPass" type="password" placeholder="Password (min. 6 karakter)" autocomplete="current-password">
+        <div class="pw">
+          <input class="field" id="fPass" type="password" placeholder="Password (min. 6 karakter)" autocomplete="current-password">
+          <button type="button" class="eye" id="eyeBtn" aria-label="Tampilkan sandi" aria-pressed="false">
+            <svg id="eyeOn" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>
+            <svg id="eyeOff" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+          </button>
+        </div>
         <div class="err" id="authErr"></div>
         <button class="btn" id="btnLogin" type="submit">Masuk</button>
         <button class="btn alt" id="btnRegister" type="button">Daftar akun baru</button>
@@ -122,8 +158,8 @@ textarea.field{min-height:150px;resize:vertical;font-family:ui-monospace,monospa
     <!-- LIST -->
     <section class="screen" id="list">
       <header class="bar">
-        <div style="flex:1"><h1 style="font-size:20px;margin:0">Chatku</h1><div class="who" id="meName"></div></div>
-        <button class="icon-btn" id="btnLogout" title="Keluar" aria-label="Keluar">&#x23FB;</button>
+        <div style="flex:1;min-width:0"><h1 style="font-size:20px;margin:0">Chatku</h1><div class="who" id="meName"></div></div>
+        <button class="icon-btn" id="btnSettings" title="Pengaturan" aria-label="Pengaturan">&#x2699;</button>
       </header>
       <div id="chatList"></div>
       <button class="fab" id="fabAdd" aria-label="Tambah kontak">+</button>
@@ -140,6 +176,56 @@ textarea.field{min-height:150px;resize:vertical;font-family:ui-monospace,monospa
       <div class="composer">
         <textarea id="msgInput" rows="1" placeholder="Ketik pesan" maxlength="2000"></textarea>
         <button class="send" id="sendBtn" aria-label="Kirim">&#x27A4;</button>
+      </div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section class="screen" id="settings">
+      <header class="bar">
+        <button class="icon-btn" id="setBack" aria-label="Kembali">&#x2190;</button>
+        <h1>Pengaturan</h1>
+      </header>
+      <div class="scroll">
+        <div class="sec">
+          <h3>Profil</h3>
+          <div class="prof">
+            <div class="av big" id="setAv"></div>
+            <div class="prof-actions">
+              <button class="btn alt sm" id="photoBtn" type="button">Ganti foto</button>
+              <button class="link" id="photoDel" type="button" style="margin-top:0">Hapus foto</button>
+            </div>
+            <input type="file" id="photoFile" accept="image/*" hidden>
+          </div>
+          <div class="lbl">Nama tampilan (dilihat temanmu)</div>
+          <input class="field" id="setName" maxlength="30" placeholder="Nama kamu">
+          <div class="lbl">Username (tetap, dipakai untuk masuk)</div>
+          <input class="field" id="setUser" disabled>
+          <div class="err" id="profErr"></div>
+          <button class="btn" id="profSave" type="button">Simpan profil</button>
+        </div>
+
+        <div class="sec">
+          <h3>Tema</h3>
+          <div class="seg">
+            <button id="thDark" type="button">Gelap</button>
+            <button id="thLight" type="button">Terang</button>
+          </div>
+        </div>
+
+        <div class="sec">
+          <h3>Wallpaper chat</h3>
+          <div class="walls" id="walls"></div>
+          <div class="row">
+            <button class="btn alt" id="wallPick" type="button">Dari galeri</button>
+            <button class="btn alt" id="wallReset" type="button">Reset</button>
+          </div>
+          <input type="file" id="wallFile" accept="image/*" hidden>
+          <p class="note">Wallpaper dan tema tersimpan di perangkat ini saja.</p>
+        </div>
+
+        <div class="sec" style="border-bottom:0">
+          <button class="btn danger" id="btnLogout" type="button">Keluar dari akun</button>
+        </div>
       </div>
     </section>
   </div>
@@ -170,6 +256,10 @@ const $ = s => document.querySelector(s);
 const LS_CFG = "chatku_firebase_config";
 const DOMAIN = "@chatku.app";   // hanya nama internal untuk login; tidak ada email yang dikirim
 
+function lsGet(k){ try { return localStorage.getItem(k); } catch { return null; } }
+function lsSet(k, v){ try { localStorage.setItem(k, v); return true; } catch { return false; } }
+function lsDel(k){ try { localStorage.removeItem(k); } catch {} }
+
 function showScreen(id){
   document.querySelectorAll(".screen").forEach(s => s.classList.toggle("active", s.id === id));
 }
@@ -185,19 +275,52 @@ function toast(msg){
   clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove("show"), 3500);
 }
 
+/* ---------- Ikon aplikasi ---------- */
+const ICON_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="110" fill="#2563eb"/><path d="M256 112c-79.5 0-144 55.8-144 124.6 0 36 17.7 68.4 46 91.1L146 392l66.5-30.7c14.2 3.2 29.2 4.9 43.5 4.9 79.5 0 144-55.8 144-124.6S335.5 112 256 112z" fill="#fff"/></svg>';
+const ICON = "data:image/svg+xml," + encodeURIComponent(ICON_SVG);
+try { document.querySelector("link[rel=icon]").href = ICON; } catch {}
+
+/* ---------- Tema gelap / terang ---------- */
+function applyTheme(t){
+  if (t !== "light") t = "dark";
+  document.documentElement.setAttribute("data-theme", t);
+  lsSet("chatku_theme", t);
+  const m = document.querySelector('meta[name="theme-color"]');
+  if (m) m.setAttribute("content", t === "light" ? "#ffffff" : "#000000");
+  $("#thDark").classList.toggle("on", t === "dark");
+  $("#thLight").classList.toggle("on", t === "light");
+}
+$("#thDark").onclick = () => applyTheme("dark");
+$("#thLight").onclick = () => applyTheme("light");
+applyTheme(document.documentElement.getAttribute("data-theme"));
+
+/* ---------- Tombol mata (lihat sandi) ---------- */
+function setEye(show){
+  $("#fPass").type = show ? "text" : "password";
+  $("#eyeOn").style.display = show ? "none" : "";
+  $("#eyeOff").style.display = show ? "" : "none";
+  $("#eyeBtn").setAttribute("aria-pressed", show ? "true" : "false");
+  $("#eyeBtn").setAttribute("aria-label", show ? "Sembunyikan sandi" : "Tampilkan sandi");
+}
+$("#eyeBtn").onclick = () => { setEye($("#fPass").type === "password"); $("#fPass").focus(); };
+
 /* ---------- Offline bar ---------- */
 function syncOnline(){ $("#offlineBar").classList.toggle("show", !navigator.onLine); }
 window.addEventListener("online", syncOnline);
 window.addEventListener("offline", syncOnline);
 syncOnline();
 
-/* ---------- Manifest dan aturan Firestore tertanam (agar cukup 1 file) ---------- */
+/* ---------- Service worker (opsional, hanya jika sw.js ada di folder yang sama) ---------- */
+if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+  navigator.serviceWorker.register("sw.js").catch(() => {});
+}
+
+/* ---------- Manifest dan aturan Firestore tertanam ---------- */
 try {
-  const icon = document.querySelector("link[rel=icon]").href;
   const manifest = {
     name: "Chatku", short_name: "Chatku", display: "standalone",
-    start_url: location.href.split("#")[0], background_color: "#075e54", theme_color: "#075e54",
-    icons: [{ src: icon, sizes: "any", type: "image/svg+xml" }]
+    start_url: location.href.split("#")[0], background_color: "#000000", theme_color: "#000000",
+    icons: [{ src: ICON, sizes: "any", type: "image/svg+xml" }]
   };
   $("#manifestLink").href = URL.createObjectURL(new Blob([JSON.stringify(manifest)], { type: "application/manifest+json" }));
 } catch {}
@@ -216,7 +339,12 @@ service cloud.firestore {
       allow create: if request.auth != null
         && uname() == username
         && request.resource.data.uid == request.auth.uid;
-      allow update, delete: if false;
+      allow update: if request.auth != null
+        && uname() == username
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.get('photo', '').size() < 60000
+        && request.resource.data.get('displayName', '').size() <= 30;
+      allow delete: if false;
     }
 
     match /chats/{chatId} {
@@ -258,7 +386,7 @@ $("#rulesCopy").onclick = async () => {
 
 /* ---------- Konfigurasi Firebase ---------- */
 function readCfg(){
-  try { const r = localStorage.getItem(LS_CFG); return r ? JSON.parse(r) : null; } catch { return null; }
+  try { const r = lsGet(LS_CFG); return r ? JSON.parse(r) : null; } catch { return null; }
 }
 function parseCfg(text){
   const keys = ["apiKey","authDomain","projectId","storageBucket","messagingSenderId","appId","measurementId"];
@@ -272,17 +400,16 @@ function parseCfg(text){
 $("#cfgSave").onclick = () => {
   const cfg = parseCfg($("#cfgText").value);
   if (!cfg){ $("#cfgErr").textContent = "Konfigurasi tidak terbaca. Pastikan apiKey, projectId, dan appId ikut tersalin."; return; }
-  localStorage.setItem(LS_CFG, JSON.stringify(cfg));
+  lsSet(LS_CFG, JSON.stringify(cfg));
   location.reload();
 };
 $("#btnResetCfg").onclick = () => {
   if (confirm("Hapus konfigurasi Firebase yang tersimpan di perangkat ini?")){
-    localStorage.removeItem(LS_CFG); location.reload();
+    lsDel(LS_CFG); location.reload();
   }
 };
 
-// Isi sekali oleh pembuat aplikasi, contoh: { apiKey:"...", authDomain:"...", projectId:"...", appId:"..." }
-// Kalau terisi, pengguna biasa tidak akan pernah melihat layar pengaturan Firebase.
+// Konfigurasi proyek Firebase milik pembuat aplikasi (pengguna biasa tidak perlu mengisi apa pun).
 const EMBEDDED_CONFIG = {
   apiKey: "AIzaSyCQCMxSEcvtttphQO8UkOWNulU8hDViByU",
   authDomain: "chatku-f3344.firebaseapp.com",
@@ -296,6 +423,29 @@ if (EMBEDDED_CONFIG) $("#btnResetCfg").style.display = "none";
 if (!cfg) showScreen("setup"); else boot(cfg);
 
 /* ====================================================== */
+function resizeImage(file, size, quality, square){
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      let sw = img.naturalWidth, sh = img.naturalHeight, sx = 0, sy = 0, dw, dh;
+      if (square){
+        const s = Math.min(sw, sh); sx = (sw - s) / 2; sy = (sh - s) / 2; sw = s; sh = s; dw = size; dh = size;
+      } else {
+        const k = Math.min(1, size / Math.max(sw, sh)); dw = Math.round(sw * k); dh = Math.round(sh * k);
+      }
+      const c = document.createElement("canvas"); c.width = dw; c.height = dh;
+      const ctx = c.getContext("2d");
+      ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, dw, dh);
+      ctx.drawImage(img, sx, sy, sw, sh, 0, 0, dw, dh);
+      URL.revokeObjectURL(url);
+      resolve(c.toDataURL("image/jpeg", quality));
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error("gambar")); };
+    img.src = url;
+  });
+}
+
 function boot(cfg){
   const app = initializeApp(cfg);
   const auth = getAuth(app);
@@ -306,6 +456,9 @@ function boot(cfg){
 
   let me = null, chats = [], currentOther = null;
   let unsubChats = null, unsubMsgs = null, ensuring = null;
+  let draftPhoto;                       // undefined = tidak diubah, "" = hapus, "data:..." = foto baru
+  const profiles = new Map();           // username -> { displayName, photo }
+  const profUnsubs = new Map();
 
   const chatId = (a, b) => [a, b].sort().join("~");
   const normUser = s => s.trim().toLowerCase().replace(/^@/, "");
@@ -313,8 +466,8 @@ function boot(cfg){
 
   /* ----- baca/belum dibaca (disimpan di perangkat) ----- */
   const readKey = id => "chatku_read:" + me + ":" + id;
-  const getRead = id => Number(localStorage.getItem(readKey(id)) || 0);
-  const setRead = (id, ms) => localStorage.setItem(readKey(id), String(Math.max(ms || 0, Date.now())));
+  const getRead = id => Number(lsGet(readKey(id)) || 0);
+  const setRead = (id, ms) => lsSet(readKey(id), String(Math.max(ms || 0, Date.now())));
 
   /* ----- format ----- */
   const tsMs = t => (t && typeof t.toMillis === "function") ? t.toMillis() : null;
@@ -334,10 +487,47 @@ function boot(cfg){
     if (sameDay(ms, now - 86400000)) return "Kemarin";
     return new Date(ms).toLocaleDateString("id-ID", { day: "2-digit", month: "2-digit", year: "2-digit" });
   }
-  function avatar(node, name){
-    let h = 0; for (const c of name) h = (h * 31 + c.charCodeAt(0)) % 360;
-    node.style.background = "hsl(" + h + ",45%,45%)";
-    node.textContent = name.charAt(0).toUpperCase();
+
+  /* ----- profil (nama tampilan dan foto) ----- */
+  const dispName = u => ((profiles.get(u) || {}).displayName || "").trim() || u;
+  function paintInitial(node, key, label){
+    let h = 0; for (const c of key) h = (h * 31 + c.charCodeAt(0)) % 360;
+    node.style.background = "hsl(" + h + ",45%,42%)";
+    node.textContent = (label || key).charAt(0).toUpperCase();
+  }
+  function paintPhoto(node, photo){
+    node.style.background = 'center / cover no-repeat url("' + photo + '")';
+    node.textContent = "";
+  }
+  function avatar(node, u){
+    const p = profiles.get(u);
+    if (p && p.photo) paintPhoto(node, p.photo); else paintInitial(node, u, dispName(u));
+  }
+  function updateMeLabel(){
+    if (!me) return;
+    const n = dispName(me);
+    $("#meName").textContent = n !== me ? n + " · @" + me : "@" + me;
+  }
+  function watchProfile(name){
+    if (profUnsubs.has(name)) return;
+    const unsub = onSnapshot(doc(db, "users", name), snap => {
+      profiles.set(name, snap.exists() ? snap.data() : {});
+      onProfileChange(name);
+    }, () => {});
+    profUnsubs.set(name, unsub);
+  }
+  function clearProfiles(){
+    profUnsubs.forEach(u => { try { u(); } catch {} });
+    profUnsubs.clear(); profiles.clear();
+  }
+  function onProfileChange(name){
+    if (!me) return;
+    if (name === me){
+      updateMeLabel();
+      if ($("#settings").classList.contains("active") && draftPhoto === undefined) paintSetAvatar();
+    }
+    renderList();
+    if (currentOther === name) fillChatHeader();
   }
 
   /* ----- notifikasi ----- */
@@ -346,7 +536,7 @@ function boot(cfg){
     try {
       if ("Notification" in window && Notification.permission === "granted"){
         const reg = await navigator.serviceWorker?.ready;
-        if (reg) { reg.showNotification(title, { body, icon: "icon.svg", tag: "chatku-" + title }); return; }
+        if (reg) { reg.showNotification(title, { body, icon: ICON, tag: "chatku-" + title }); return; }
         new Notification(title, { body });
       }
     } catch {}
@@ -362,7 +552,7 @@ function boot(cfg){
     if (c === "auth/network-request-failed") return "Tidak ada internet. Masuk dan daftar butuh koneksi.";
     if (c === "auth/operation-not-allowed") return "Aktifkan metode Email/Password di Firebase Authentication.";
     if (c === "auth/too-many-requests") return "Terlalu banyak percobaan. Coba lagi nanti.";
-    if (c === "permission-denied") return "Aturan Firestore belum dipasang. Salin isi firestore.rules ke Firebase.";
+    if (c === "permission-denied") return "Aturan Firestore belum dipasang atau belum diperbarui.";
     return "Gagal: " + (c || (e && e.message) || "tidak diketahui");
   }
   function setBusy(b){ $("#btnLogin").disabled = b; $("#btnRegister").disabled = b; }
@@ -409,15 +599,17 @@ function boot(cfg){
   onAuthStateChanged(auth, user => {
     if (user){
       me = user.email.split("@")[0];
-      $("#meName").textContent = "@" + me;
+      updateMeLabel();
       showScreen("list");
+      watchProfile(me);
       ensureUserDoc().catch(() => {});
       startChatList();
     } else {
-      me = null; ensuring = null; chats = []; currentOther = null;
+      me = null; ensuring = null; chats = []; currentOther = null; draftPhoto = undefined;
       if (unsubChats){ unsubChats(); unsubChats = null; }
       if (unsubMsgs){ unsubMsgs(); unsubMsgs = null; }
-      $("#fPass").value = "";
+      clearProfiles();
+      $("#fPass").value = ""; setEye(false);
       showScreen("auth");
     }
   });
@@ -428,18 +620,20 @@ function boot(cfg){
     const q = query(collection(db, "chats"), where("members", "array-contains", me));
     unsubChats = onSnapshot(q, snap => {
       chats = snap.docs.map(d => ({ id: d.id, ...d.data({ serverTimestamps: "estimate" }) }));
+      chats.forEach(c => { const o = c.members.find(m => m !== me); if (o) watchProfile(o); });
       renderList();
       snap.docChanges().forEach(ch => {
         if (ch.type !== "modified") return;
         const c = ch.doc.data();
         if (!c.lastFrom || c.lastFrom === me) return;
         const viewing = currentOther && chatId(me, currentOther) === ch.doc.id && !document.hidden;
-        if (!viewing) notify(c.lastFrom, c.lastMessage || "Pesan baru");
+        if (!viewing) notify(dispName(c.lastFrom), c.lastMessage || "Pesan baru");
       });
     }, err => { if (err.code === "permission-denied") toast("Aturan Firestore belum dipasang."); });
   }
 
   function renderList(){
+    if (!me) return;
     const box = $("#chatList"); box.textContent = "";
     const rows = chats.map(c => {
       const other = c.members.find(m => m !== me) || me;
@@ -456,7 +650,7 @@ function boot(cfg){
       const it = el("div", "item");
       const av = el("div", "av"); avatar(av, other);
       const mid = el("div", "mid");
-      mid.append(el("div", "name", other));
+      mid.append(el("div", "name", dispName(other)));
       mid.append(el("div", "prev", c.lastMessage ? (c.lastFrom === me ? "Kamu: " : "") + c.lastMessage : "Belum ada pesan"));
       const right = el("div", "right");
       right.append(el("span", "", last ? listTime(last) : ""));
@@ -495,14 +689,126 @@ function boot(cfg){
     $("#addOk").disabled = false;
   };
 
+  /* ----- wallpaper chat (disimpan di perangkat) ----- */
+  const WALLS = [
+    { id: "default", name: "Bawaan", css: "" },
+    { id: "black",   name: "Hitam",  css: "#000000" },
+    { id: "night",   name: "Malam",  css: "linear-gradient(160deg,#0f2027,#203a43,#2c5364)" },
+    { id: "violet",  name: "Ungu",   css: "linear-gradient(160deg,#1a0b2e,#3b1d5a)" },
+    { id: "dusk",    name: "Senja",  css: "linear-gradient(160deg,#42275a,#734b6d)" },
+    { id: "gray",    name: "Abu",    css: "#e9ecef" },
+    { id: "cream",   name: "Krem",   css: "#f3ead8" },
+    { id: "sky",     name: "Langit", css: "linear-gradient(160deg,#a1c4fd,#c2e9fb)" }
+  ];
+  function loadWall(){
+    try { return JSON.parse(lsGet("chatku_wall") || "null") || { type: "preset", value: "default" }; }
+    catch { return { type: "preset", value: "default" }; }
+  }
+  function saveWall(w){ return lsSet("chatku_wall", JSON.stringify(w)); }
+  function applyWall(){
+    const w = loadWall(), box = $("#msgs");
+    box.style.background = "";
+    if (w.type === "preset"){
+      const p = WALLS.find(x => x.id === w.value);
+      if (p && p.css) box.style.background = p.css;
+    } else if (w.type === "image" && w.value){
+      box.style.background = 'center / cover no-repeat url("' + w.value + '")';
+    }
+  }
+  function renderWalls(){
+    const box = $("#walls"); box.textContent = "";
+    const cur = loadWall();
+    WALLS.forEach(w => {
+      const d = el("div", "wall" + (cur.type === "preset" && cur.value === w.id ? " on" : ""));
+      if (w.css) d.style.background = w.css;
+      d.append(el("span", "", w.name));
+      d.onclick = () => { saveWall({ type: "preset", value: w.id }); applyWall(); renderWalls(); };
+      box.append(d);
+    });
+    if (cur.type === "image" && cur.value){
+      const d = el("div", "wall on");
+      d.style.background = 'center / cover no-repeat url("' + cur.value + '")';
+      d.append(el("span", "", "Fotomu"));
+      box.append(d);
+    }
+  }
+  $("#wallPick").onclick = () => $("#wallFile").click();
+  $("#wallFile").onchange = async e => {
+    const f = e.target.files[0]; e.target.value = "";
+    if (!f) return;
+    try {
+      const data = await resizeImage(f, 900, 0.65, false);
+      if (!saveWall({ type: "image", value: data })){ toast("Gambar terlalu besar, coba gambar lain."); return; }
+      applyWall(); renderWalls();
+    } catch { toast("Gambar tidak bisa dibaca."); }
+  };
+  $("#wallReset").onclick = () => { saveWall({ type: "preset", value: "default" }); applyWall(); renderWalls(); };
+  applyWall();
+
+  /* ----- pengaturan ----- */
+  function paintSetAvatar(){
+    const node = $("#setAv");
+    const p = profiles.get(me) || {};
+    const photo = draftPhoto !== undefined ? draftPhoto : (p.photo || "");
+    if (photo) paintPhoto(node, photo);
+    else paintInitial(node, me, $("#setName").value.trim() || me);
+  }
+  function fillSettings(){
+    draftPhoto = undefined;
+    const p = profiles.get(me) || {};
+    $("#setName").value = p.displayName || "";
+    $("#setUser").value = "@" + me;
+    $("#profErr").textContent = "";
+    paintSetAvatar(); renderWalls();
+  }
+  function openSettings(){
+    fillSettings();
+    showScreen("settings");
+    history.pushState({ s: 1 }, "");
+  }
+  $("#btnSettings").onclick = openSettings;
+  $("#setBack").onclick = () => history.back();
+  $("#setName").addEventListener("input", () => { if (draftPhoto === undefined && !(profiles.get(me) || {}).photo) paintSetAvatar(); });
+
+  $("#photoBtn").onclick = () => $("#photoFile").click();
+  $("#photoFile").onchange = async e => {
+    const f = e.target.files[0]; e.target.value = "";
+    if (!f) return;
+    try { draftPhoto = await resizeImage(f, 160, 0.8, true); paintSetAvatar(); }
+    catch { toast("Gambar tidak bisa dibaca."); }
+  };
+  $("#photoDel").onclick = () => { draftPhoto = ""; paintSetAvatar(); };
+
+  $("#profSave").onclick = () => {
+    const err = $("#profErr"); err.textContent = "";
+    const u = auth.currentUser; if (!u) return;
+    const name = $("#setName").value.trim().slice(0, 30);
+    const data = { uid: u.uid, username: me, displayName: name };
+    if (draftPhoto !== undefined) data.photo = draftPhoto;
+    const sent = draftPhoto;
+    toast(navigator.onLine ? "Menyimpan..." : "Offline: profil akan tersimpan saat online.");
+    setDoc(doc(db, "users", me), data, { merge: true })
+      .then(() => { if (draftPhoto === sent) draftPhoto = undefined; toast("Profil tersimpan."); })
+      .catch(e => {
+        err.textContent = e.code === "permission-denied"
+          ? "Ditolak server. Perbarui aturan Firestore dengan versi terbaru."
+          : "Gagal menyimpan profil.";
+      });
+  };
+
   /* ----- layar chat ----- */
+  function fillChatHeader(){
+    if (!currentOther) return;
+    avatar($("#chatAv"), currentOther);
+    $("#chatName").textContent = dispName(currentOther);
+    $("#chatSub").textContent = "@" + currentOther;
+  }
   function openChat(other){
     currentOther = other;
     const id = chatId(me, other);
-    avatar($("#chatAv"), other);
-    $("#chatName").textContent = other;
-    $("#chatSub").textContent = "@" + other;
+    fillChatHeader();
     const box = $("#msgs"); box.textContent = ""; delete box.dataset.ready;
+    applyWall();
     showScreen("chat");
     history.pushState({ chat: other }, "");
     setRead(id, tsMs(chats.find(c => c.id === id)?.lastAt));
@@ -518,7 +824,10 @@ function boot(cfg){
     renderList();
   }
   $("#backBtn").onclick = () => history.back();
-  window.addEventListener("popstate", () => { if ($("#chat").classList.contains("active")) leaveChat(); });
+  window.addEventListener("popstate", () => {
+    if ($("#chat").classList.contains("active")) leaveChat();
+    else if ($("#settings").classList.contains("active")) showScreen("list");
+  });
 
   function renderMessages(snap, id){
     const box = $("#msgs");
