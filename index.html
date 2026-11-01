@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#075e54">
+<title>Chatku</title>
+<link id="manifestLink" rel="manifest" href="data:application/json,%7B%7D">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='110' fill='%23075e54'/%3E%3Cpath d='M256 112c-79.500 0-144 55.800-144 124.600 0 36 17.700 68.400 46 91.100L146 392l66.500-30.700c14.200 3.200 29.200 4.900 43.500 4.900 79.500 0 144-55.800 144-124.600S335.500 112 256 112z' fill='%23fff'/%3E%3C/svg%3E">
+<style>
+:root{
+  --g:#075e54; --g2:#128c7e; --g3:#25d366;
+  --bg:#efeae2; --me:#d9fdd3; --them:#ffffff;
+  --txt:#111b21; --sub:#667781; --line:#e9edef; --panel:#ffffff; --head:#075e54;
+}
+@media (prefers-color-scheme: dark){
+  :root{ --bg:#0b141a; --me:#005c4b; --them:#202c33; --txt:#e9edef; --sub:#8696a0; --line:#222d34; --panel:#111b21; --head:#202c33; }
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:var(--panel);color:var(--txt);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+#app{height:100dvh;max-width:560px;margin:0 auto;display:flex;flex-direction:column;background:var(--panel);position:relative;overflow:hidden}
+#offlineBar{display:none;background:#f0ad4e;color:#222;text-align:center;font-size:13px;padding:6px 10px}
+#offlineBar.show{display:block}
+#screens{flex:1;position:relative;min-height:0}
+.screen{position:absolute;inset:0;display:none;flex-direction:column;background:var(--panel)}
+.screen.active{display:flex}
+header.bar{background:var(--head);color:#fff;display:flex;align-items:center;gap:10px;padding:12px 14px;min-height:58px}
+header.bar h1{font-size:20px;margin:0;flex:1}
+header.bar .who{font-size:12px;opacity:.8}
+.icon-btn{background:none;border:0;color:#fff;font-size:22px;padding:6px 8px;border-radius:50%;cursor:pointer;line-height:1}
+.icon-btn:active{background:rgba(255,255,255,.15)}
+input,textarea,button{font-family:inherit}
+input,textarea{font-size:16px}
+.center{flex:1;overflow:auto;padding:28px 22px;display:flex;flex-direction:column;justify-content:center;gap:12px}
+.center h2{margin:0 0 4px;font-size:24px;color:var(--g2)}
+.center p{margin:0;color:var(--sub);font-size:14px;line-height:1.5}
+.field{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--txt);outline:none}
+.field:focus{border-color:var(--g2)}
+.btn{border:0;border-radius:10px;padding:12px 16px;font-size:16px;font-weight:600;cursor:pointer;background:var(--g2);color:#fff}
+.btn.alt{background:transparent;color:var(--g2);border:1px solid var(--g2)}
+.btn:disabled{opacity:.6}
+.err{color:#d93025;font-size:14px;min-height:18px}
+.link{background:none;border:0;color:var(--sub);font-size:12px;text-decoration:underline;cursor:pointer;margin-top:8px}
+textarea.field{min-height:150px;resize:vertical;font-family:ui-monospace,monospace;font-size:13px}
+
+#chatList{flex:1;overflow:auto}
+.item{display:flex;gap:12px;padding:12px 14px;align-items:center;border-bottom:1px solid var(--line);cursor:pointer}
+.item:active{background:var(--line)}
+.av{width:46px;height:46px;border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;flex:none}
+.item .mid{flex:1;min-width:0}
+.item .name{font-weight:600;font-size:16px}
+.item .prev{color:var(--sub);font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.item .right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;font-size:12px;color:var(--sub)}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--g3)}
+.empty{color:var(--sub);text-align:center;padding:60px 30px;font-size:15px;line-height:1.6;white-space:pre-line}
+.fab{position:absolute;right:18px;bottom:calc(18px + env(safe-area-inset-bottom));width:56px;height:56px;border-radius:50%;border:0;background:var(--g3);color:#fff;font-size:28px;box-shadow:0 3px 10px rgba(0,0,0,.3);cursor:pointer}
+
+#chat header.bar{padding-left:6px}
+#chat .av{width:38px;height:38px;font-size:16px}
+#chat .title{flex:1;min-width:0}
+#chat .title b{display:block;font-size:17px}
+#chat .title span{font-size:12px;opacity:.85}
+#msgs{flex:1;overflow:auto;padding:10px 10px 6px;background:var(--bg);display:flex;flex-direction:column;gap:3px}
+.day{align-self:center;background:var(--panel);color:var(--sub);font-size:12px;padding:3px 10px;border-radius:8px;margin:8px 0}
+.msg{max-width:80%;padding:6px 9px 4px;border-radius:8px;white-space:pre-wrap;word-break:break-word;font-size:15px;line-height:1.35;box-shadow:0 1px 1px rgba(0,0,0,.12)}
+.msg.me{align-self:flex-end;background:var(--me);border-top-right-radius:2px}
+.msg.them{align-self:flex-start;background:var(--them);border-top-left-radius:2px}
+.msg .meta{float:right;margin:7px 0 0 10px;font-size:11px;color:var(--sub)}
+.hint{margin:auto;color:var(--sub);font-size:14px;text-align:center;padding:20px}
+.composer{display:flex;gap:8px;padding:8px 8px calc(8px + env(safe-area-inset-bottom));background:var(--bg);align-items:flex-end}
+.composer textarea{flex:1;border:0;border-radius:22px;padding:11px 16px;background:var(--panel);color:var(--txt);resize:none;max-height:120px;outline:none;line-height:1.3}
+.send{width:46px;height:46px;border-radius:50%;border:0;background:var(--g2);color:#fff;font-size:20px;cursor:pointer;flex:none}
+
+#modal{position:absolute;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;padding:20px;z-index:20}
+#modal.show{display:flex}
+.card{background:var(--panel);border-radius:14px;padding:20px;width:100%;max-width:380px;display:flex;flex-direction:column;gap:10px}
+.card h3{margin:0}
+.row{display:flex;gap:8px}
+.row .btn{flex:1}
+#toast{position:absolute;top:10px;left:50%;transform:translateX(-50%);background:#111b21;color:#fff;padding:9px 14px;border-radius:10px;font-size:14px;z-index:30;display:none;max-width:90%;box-shadow:0 3px 12px rgba(0,0,0,.35)}
+#toast.show{display:block}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="offlineBar">Kamu sedang offline. Pesan yang kamu tulis akan terkirim otomatis saat internet kembali.</div>
+  <div id="toast"></div>
+
+  <div id="screens">
+    <!-- SETUP -->
+    <section class="screen" id="setup">
+      <header class="bar"><h1>Chatku</h1></header>
+      <div class="center">
+        <h2>Pasang Firebase dulu</h2>
+        <p>Buka Firebase Console, buat proyek, lalu tambahkan Web App. Salin blok <b>firebaseConfig</b> yang muncul dan tempel di bawah ini.</p>
+        <textarea class="field" id="cfgText" placeholder='const firebaseConfig = {&#10;  apiKey: "...",&#10;  authDomain: "...",&#10;  projectId: "...",&#10;  ...&#10;};'></textarea>
+        <div class="err" id="cfgErr"></div>
+        <button class="btn" id="cfgSave">Simpan dan mulai</button>
+        <details style="margin-top:6px">
+          <summary style="cursor:pointer;color:var(--g2);font-size:14px">Aturan Firestore (salin ke Firebase, tab Rules)</summary>
+          <pre id="rulesBox" style="max-height:220px;overflow:auto;background:var(--line);padding:10px;border-radius:8px;font-size:11px;margin:8px 0"></pre>
+          <button class="btn alt" id="rulesCopy" type="button" style="width:100%">Salin aturan</button>
+        </details>
+      </div>
+    </section>
+
+    <!-- AUTH -->
+    <section class="screen" id="auth">
+      <header class="bar"><h1>Chatku</h1></header>
+      <form class="center" id="authForm" autocomplete="on">
+        <h2>Masuk atau daftar</h2>
+        <p>Pakai username dan password. Teman bisa menambahkan kamu lewat username.</p>
+        <input class="field" id="fUser" placeholder="Username (huruf kecil, angka, _)" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" maxlength="21">
+        <input class="field" id="fPass" type="password" placeholder="Password (min. 6 karakter)" autocomplete="current-password">
+        <div class="err" id="authErr"></div>
+        <button class="btn" id="btnLogin" type="submit">Masuk</button>
+        <button class="btn alt" id="btnRegister" type="button">Daftar akun baru</button>
+        <button class="link" id="btnResetCfg" type="button">Ganti konfigurasi Firebase</button>
+      </form>
+    </section>
+
+    <!-- LIST -->
+    <section class="screen" id="list">
+      <header class="bar">
+        <div style="flex:1"><h1 style="font-size:20px;margin:0">Chatku</h1><div class="who" id="meName"></div></div>
+        <button class="icon-btn" id="btnLogout" title="Keluar" aria-label="Keluar">&#x23FB;</button>
+      </header>
+      <div id="chatList"></div>
+      <button class="fab" id="fabAdd" aria-label="Tambah kontak">+</button>
+    </section>
+
+    <!-- CHAT -->
+    <section class="screen" id="chat">
+      <header class="bar">
+        <button class="icon-btn" id="backBtn" aria-label="Kembali">&#x2190;</button>
+        <div class="av" id="chatAv"></div>
+        <div class="title"><b id="chatName"></b><span id="chatSub"></span></div>
+      </header>
+      <div id="msgs"></div>
+      <div class="composer">
+        <textarea id="msgInput" rows="1" placeholder="Ketik pesan" maxlength="2000"></textarea>
+        <button class="send" id="sendBtn" aria-label="Kirim">&#x27A4;</button>
+      </div>
+    </section>
+  </div>
+
+  <div id="modal">
+    <div class="card">
+      <h3>Tambah kontak</h3>
+      <p style="margin:0;color:var(--sub);font-size:14px">Masukkan username temanmu.</p>
+      <input class="field" id="addUser" placeholder="username teman" autocapitalize="none" autocorrect="off" spellcheck="false" maxlength="21">
+      <div class="err" id="addErr"></div>
+      <div class="row">
+        <button class="btn alt" id="addCancel" type="button">Batal</button>
+        <button class="btn" id="addOk" type="button">Tambah</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut }
+  from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager,
+  collection, doc, getDoc, setDoc, writeBatch, query, where, orderBy, limitToLast, onSnapshot, serverTimestamp }
+  from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
+const $ = s => document.querySelector(s);
+const LS_CFG = "chatku_firebase_config";
+const DOMAIN = "@chatku.app";   // hanya nama internal untuk login; tidak ada email yang dikirim
+
+function showScreen(id){
+  document.querySelectorAll(".screen").forEach(s => s.classList.toggle("active", s.id === id));
+}
+function el(tag, cls, text){
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (text != null) e.textContent = text;
+  return e;
+}
+let toastTimer;
+function toast(msg){
+  const t = $("#toast"); t.textContent = msg; t.classList.add("show");
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove("show"), 3500);
+}
+
+/* ---------- Offline bar ---------- */
+function syncOnline(){ $("#offlineBar").classList.toggle("show", !navigator.onLine); }
+window.addEventListener("online", syncOnline);
+window.addEventListener("offline", syncOnline);
+syncOnline();
+
+/* ---------- Manifest dan aturan Firestore tertanam (agar cukup 1 file) ---------- */
+try {
+  const icon = document.querySelector("link[rel=icon]").href;
+  const manifest = {
+    name: "Chatku", short_name: "Chatku", display: "standalone",
+    start_url: location.href.split("#")[0], background_color: "#075e54", theme_color: "#075e54",
+    icons: [{ src: icon, sizes: "any", type: "image/svg+xml" }]
+  };
+  $("#manifestLink").href = URL.createObjectURL(new Blob([JSON.stringify(manifest)], { type: "application/manifest+json" }));
+} catch {}
+
+const RULES = `rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function uname() {
+      return request.auth.token.email.split('@')[0];
+    }
+
+    match /users/{username} {
+      allow get: if request.auth != null;
+      allow list: if false;
+      allow create: if request.auth != null
+        && uname() == username
+        && request.resource.data.uid == request.auth.uid;
+      allow update, delete: if false;
+    }
+
+    match /chats/{chatId} {
+      allow read: if request.auth != null && uname() in resource.data.members;
+
+      allow create: if request.auth != null
+        && request.resource.data.members.size() == 2
+        && uname() in request.resource.data.members
+        && chatId == request.resource.data.members[0] + '~' + request.resource.data.members[1];
+
+      allow update: if request.auth != null
+        && uname() in resource.data.members
+        && request.resource.data.members == resource.data.members;
+
+      allow delete: if false;
+
+      match /messages/{msgId} {
+        allow read: if request.auth != null
+          && uname() in get(/databases/$(database)/documents/chats/$(chatId)).data.members;
+
+        allow create: if request.auth != null
+          && uname() in get(/databases/$(database)/documents/chats/$(chatId)).data.members
+          && request.resource.data.from == uname()
+          && request.resource.data.text is string
+          && request.resource.data.text.size() > 0
+          && request.resource.data.text.size() <= 2000;
+
+        allow update, delete: if false;
+      }
+    }
+  }
+}
+`;
+$("#rulesBox").textContent = RULES;
+$("#rulesCopy").onclick = async () => {
+  try { await navigator.clipboard.writeText(RULES); toast("Aturan tersalin. Tempel di Firebase, tab Rules."); }
+  catch { const r = document.createRange(); r.selectNodeContents($("#rulesBox")); getSelection().removeAllRanges(); getSelection().addRange(r); toast("Teks terpilih, salin manual."); }
+};
+
+/* ---------- Konfigurasi Firebase ---------- */
+function readCfg(){
+  try { const r = localStorage.getItem(LS_CFG); return r ? JSON.parse(r) : null; } catch { return null; }
+}
+function parseCfg(text){
+  const keys = ["apiKey","authDomain","projectId","storageBucket","messagingSenderId","appId","measurementId"];
+  const cfg = {};
+  for (const k of keys){
+    const m = text.match(new RegExp(k + "[\"']?\\s*:\\s*[\"']([^\"']+)[\"']"));
+    if (m) cfg[k] = m[1];
+  }
+  return (cfg.apiKey && cfg.projectId && cfg.appId) ? cfg : null;
+}
+$("#cfgSave").onclick = () => {
+  const cfg = parseCfg($("#cfgText").value);
+  if (!cfg){ $("#cfgErr").textContent = "Konfigurasi tidak terbaca. Pastikan apiKey, projectId, dan appId ikut tersalin."; return; }
+  localStorage.setItem(LS_CFG, JSON.stringify(cfg));
+  location.reload();
+};
+$("#btnResetCfg").onclick = () => {
+  if (confirm("Hapus konfigurasi Firebase yang tersimpan di perangkat ini?")){
+    localStorage.removeItem(LS_CFG); location.reload();
+  }
+};
+
+// Isi sekali oleh pembuat aplikasi, contoh: { apiKey:"...", authDomain:"...", projectId:"...", appId:"..." }
+// Kalau terisi, pengguna biasa tidak akan pernah melihat layar pengaturan Firebase.
+const EMBEDDED_CONFIG = {
+  apiKey: "AIzaSyCQCMxSEcvtttphQO8UkOWNulU8hDViByU",
+  authDomain: "chatku-f3344.firebaseapp.com",
+  projectId: "chatku-f3344",
+  storageBucket: "chatku-f3344.firebasestorage.app",
+  messagingSenderId: "748454451093",
+  appId: "1:748454451093:web:176c68cf2d950067d5889c"
+};
+const cfg = EMBEDDED_CONFIG || readCfg();
+if (EMBEDDED_CONFIG) $("#btnResetCfg").style.display = "none";
+if (!cfg) showScreen("setup"); else boot(cfg);
+
+/* ====================================================== */
+function boot(cfg){
+  const app = initializeApp(cfg);
+  const auth = getAuth(app);
+  // Cache offline: riwayat chat tersimpan di HP dan pesan tertunda dikirim otomatis saat online
+  const db = initializeFirestore(app, {
+    localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() })
+  });
+
+  let me = null, chats = [], currentOther = null;
+  let unsubChats = null, unsubMsgs = null, ensuring = null;
+
+  const chatId = (a, b) => [a, b].sort().join("~");
+  const normUser = s => s.trim().toLowerCase().replace(/^@/, "");
+  const validUser = s => /^[a-z0-9_]{3,20}$/.test(s);
+
+  /* ----- baca/belum dibaca (disimpan di perangkat) ----- */
+  const readKey = id => "chatku_read:" + me + ":" + id;
+  const getRead = id => Number(localStorage.getItem(readKey(id)) || 0);
+  const setRead = (id, ms) => localStorage.setItem(readKey(id), String(Math.max(ms || 0, Date.now())));
+
+  /* ----- format ----- */
+  const tsMs = t => (t && typeof t.toMillis === "function") ? t.toMillis() : null;
+  function fmtTime(ms){
+    return new Date(ms).toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" }).replace(".", ":");
+  }
+  function sameDay(a, b){ return new Date(a).toDateString() === new Date(b).toDateString(); }
+  function dayLabel(ms){
+    const now = Date.now();
+    if (sameDay(ms, now)) return "Hari ini";
+    if (sameDay(ms, now - 86400000)) return "Kemarin";
+    return new Date(ms).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
+  }
+  function listTime(ms){
+    const now = Date.now();
+    if (sameDay(ms, now)) return fmtTime(ms);
+    if (sameDay(ms, now - 86400000)) return "Kemarin";
+    return new Date(ms).toLocaleDateString("id-ID", { day: "2-digit", month: "2-digit", year: "2-digit" });
+  }
+  function avatar(node, name){
+    let h = 0; for (const c of name) h = (h * 31 + c.charCodeAt(0)) % 360;
+    node.style.background = "hsl(" + h + ",45%,45%)";
+    node.textContent = name.charAt(0).toUpperCase();
+  }
+
+  /* ----- notifikasi ----- */
+  async function notify(title, body){
+    if (!document.hidden){ toast(title + ": " + body); return; }
+    try {
+      if ("Notification" in window && Notification.permission === "granted"){
+        const reg = await navigator.serviceWorker?.ready;
+        if (reg) { reg.showNotification(title, { body, icon: "icon.svg", tag: "chatku-" + title }); return; }
+        new Notification(title, { body });
+      }
+    } catch {}
+  }
+
+  /* ----- auth ----- */
+  function authMsg(e){
+    const c = e && e.code || "";
+    if (c === "auth/email-already-in-use") return "Username sudah dipakai. Coba username lain.";
+    if (c === "auth/invalid-credential" || c === "auth/wrong-password" || c === "auth/user-not-found" || c === "auth/invalid-login-credentials")
+      return "Username atau password salah.";
+    if (c === "auth/weak-password") return "Password minimal 6 karakter.";
+    if (c === "auth/network-request-failed") return "Tidak ada internet. Masuk dan daftar butuh koneksi.";
+    if (c === "auth/operation-not-allowed") return "Aktifkan metode Email/Password di Firebase Authentication.";
+    if (c === "auth/too-many-requests") return "Terlalu banyak percobaan. Coba lagi nanti.";
+    if (c === "permission-denied") return "Aturan Firestore belum dipasang. Salin isi firestore.rules ke Firebase.";
+    return "Gagal: " + (c || (e && e.message) || "tidak diketahui");
+  }
+  function setBusy(b){ $("#btnLogin").disabled = b; $("#btnRegister").disabled = b; }
+
+  function ensureUserDoc(){
+    if (ensuring) return ensuring;
+    ensuring = (async () => {
+      const u = auth.currentUser; if (!u) return;
+      const name = u.email.split("@")[0];
+      const ref = doc(db, "users", name);
+      let exists = true;
+      try { exists = (await getDoc(ref)).exists(); } catch { return; } // offline: lewati
+      if (!exists) await setDoc(ref, { uid: u.uid, username: name, createdAt: serverTimestamp() });
+    })();
+    ensuring.catch(() => { ensuring = null; });
+    return ensuring;
+  }
+
+  async function doAuth(mode){
+    const u = normUser($("#fUser").value), p = $("#fPass").value, err = $("#authErr");
+    err.textContent = "";
+    if (!validUser(u)){ err.textContent = "Username 3 sampai 20 karakter: huruf kecil, angka, atau _."; return; }
+    if (p.length < 6){ err.textContent = "Password minimal 6 karakter."; return; }
+    if ("Notification" in window && Notification.permission === "default") { try { Notification.requestPermission(); } catch {} }
+    setBusy(true);
+    try {
+      if (mode === "register"){
+        await createUserWithEmailAndPassword(auth, u + DOMAIN, p);
+        await ensureUserDoc();
+      } else {
+        await signInWithEmailAndPassword(auth, u + DOMAIN, p);
+      }
+    } catch (e) { err.textContent = authMsg(e); }
+    setBusy(false);
+  }
+  $("#authForm").addEventListener("submit", e => { e.preventDefault(); doAuth("login"); });
+  $("#btnRegister").onclick = () => doAuth("register");
+
+  $("#btnLogout").onclick = async () => {
+    if (!confirm("Keluar dari akun ini?")) return;
+    await signOut(auth);
+  };
+
+  onAuthStateChanged(auth, user => {
+    if (user){
+      me = user.email.split("@")[0];
+      $("#meName").textContent = "@" + me;
+      showScreen("list");
+      ensureUserDoc().catch(() => {});
+      startChatList();
+    } else {
+      me = null; ensuring = null; chats = []; currentOther = null;
+      if (unsubChats){ unsubChats(); unsubChats = null; }
+      if (unsubMsgs){ unsubMsgs(); unsubMsgs = null; }
+      $("#fPass").value = "";
+      showScreen("auth");
+    }
+  });
+
+  /* ----- daftar chat ----- */
+  function startChatList(){
+    if (unsubChats) unsubChats();
+    const q = query(collection(db, "chats"), where("members", "array-contains", me));
+    unsubChats = onSnapshot(q, snap => {
+      chats = snap.docs.map(d => ({ id: d.id, ...d.data({ serverTimestamps: "estimate" }) }));
+      renderList();
+      snap.docChanges().forEach(ch => {
+        if (ch.type !== "modified") return;
+        const c = ch.doc.data();
+        if (!c.lastFrom || c.lastFrom === me) return;
+        const viewing = currentOther && chatId(me, currentOther) === ch.doc.id && !document.hidden;
+        if (!viewing) notify(c.lastFrom, c.lastMessage || "Pesan baru");
+      });
+    }, err => { if (err.code === "permission-denied") toast("Aturan Firestore belum dipasang."); });
+  }
+
+  function renderList(){
+    const box = $("#chatList"); box.textContent = "";
+    const rows = chats.map(c => {
+      const other = c.members.find(m => m !== me) || me;
+      const last = tsMs(c.lastAt) || tsMs(c.createdAt) || 0;
+      const unread = c.lastFrom && c.lastFrom !== me && last > getRead(c.id);
+      return { c, other, last, unread };
+    }).sort((a, b) => b.last - a.last);
+
+    if (!rows.length){
+      box.append(el("div", "empty", "Belum ada chat.\nTekan tombol + lalu masukkan username temanmu."));
+      return;
+    }
+    rows.forEach(({ c, other, last, unread }) => {
+      const it = el("div", "item");
+      const av = el("div", "av"); avatar(av, other);
+      const mid = el("div", "mid");
+      mid.append(el("div", "name", other));
+      mid.append(el("div", "prev", c.lastMessage ? (c.lastFrom === me ? "Kamu: " : "") + c.lastMessage : "Belum ada pesan"));
+      const right = el("div", "right");
+      right.append(el("span", "", last ? listTime(last) : ""));
+      if (unread) right.append(el("span", "dot"));
+      it.append(av, mid, right);
+      it.onclick = () => openChat(other);
+      box.append(it);
+    });
+  }
+
+  /* ----- tambah kontak ----- */
+  const modal = $("#modal");
+  function openModal(){ $("#addUser").value = ""; $("#addErr").textContent = ""; modal.classList.add("show"); setTimeout(() => $("#addUser").focus(), 50); }
+  function closeModal(){ modal.classList.remove("show"); }
+  $("#fabAdd").onclick = openModal;
+  $("#addCancel").onclick = closeModal;
+  modal.addEventListener("click", e => { if (e.target === modal) closeModal(); });
+  $("#addUser").addEventListener("keydown", e => { if (e.key === "Enter") $("#addOk").click(); });
+  $("#addOk").onclick = async () => {
+    const other = normUser($("#addUser").value), err = $("#addErr");
+    err.textContent = "";
+    if (!validUser(other)){ err.textContent = "Username tidak valid."; return; }
+    if (other === me){ err.textContent = "Itu username kamu sendiri."; return; }
+    $("#addOk").disabled = true;
+    try {
+      const snap = await getDoc(doc(db, "users", other));
+      if (!snap.exists()){ err.textContent = "Username tidak ditemukan."; $("#addOk").disabled = false; return; }
+      const members = [me, other].sort();
+      await setDoc(doc(db, "chats", members.join("~")), { members, createdAt: serverTimestamp() }, { merge: true });
+      closeModal();
+      openChat(other);
+    } catch (e) {
+      err.textContent = (e.code === "unavailable" || !navigator.onLine)
+        ? "Menambah kontak butuh internet." : authMsg(e);
+    }
+    $("#addOk").disabled = false;
+  };
+
+  /* ----- layar chat ----- */
+  function openChat(other){
+    currentOther = other;
+    const id = chatId(me, other);
+    avatar($("#chatAv"), other);
+    $("#chatName").textContent = other;
+    $("#chatSub").textContent = "@" + other;
+    const box = $("#msgs"); box.textContent = ""; delete box.dataset.ready;
+    showScreen("chat");
+    history.pushState({ chat: other }, "");
+    setRead(id, tsMs(chats.find(c => c.id === id)?.lastAt));
+    if (unsubMsgs) unsubMsgs();
+    const q = query(collection(db, "chats", id, "messages"), orderBy("createdAt"), limitToLast(300));
+    unsubMsgs = onSnapshot(q, { includeMetadataChanges: true }, snap => renderMessages(snap, id));
+    setTimeout(() => $("#msgInput").focus(), 100);
+  }
+  function leaveChat(){
+    if (unsubMsgs){ unsubMsgs(); unsubMsgs = null; }
+    currentOther = null;
+    showScreen("list");
+    renderList();
+  }
+  $("#backBtn").onclick = () => history.back();
+  window.addEventListener("popstate", () => { if ($("#chat").classList.contains("active")) leaveChat(); });
+
+  function renderMessages(snap, id){
+    const box = $("#msgs");
+    const nearBottom = box.scrollHeight - box.scrollTop - box.clientHeight < 100;
+    const first = !box.dataset.ready;
+    box.textContent = "";
+    if (snap.empty){
+      box.append(el("div", "hint", "Belum ada pesan. Kirim yang pertama!"));
+    }
+    let lastMs = 0, lastMine = false, newest = 0;
+    snap.docs.forEach(d => {
+      const m = d.data({ serverTimestamps: "estimate" });
+      const ms = tsMs(m.createdAt) || m.clientAt || Date.now();
+      if (!lastMs || !sameDay(lastMs, ms)) box.append(el("div", "day", dayLabel(ms)));
+      lastMs = ms; newest = Math.max(newest, ms);
+      const mine = m.from === me; lastMine = mine;
+      const row = el("div", "msg " + (mine ? "me" : "them"));
+      row.append(el("span", "txt", m.text));
+      row.append(el("span", "meta", fmtTime(ms) + (mine ? (d.metadata.hasPendingWrites ? " \u{1F553}" : " ✓") : "")));
+      box.append(row);
+    });
+    box.dataset.ready = "1";
+    if (first || nearBottom || lastMine) box.scrollTop = box.scrollHeight;
+    if (!document.hidden) setRead(id, newest);
+  }
+
+  /* ----- kirim pesan ----- */
+  const input = $("#msgInput");
+  function autosize(){ input.style.height = "auto"; input.style.height = Math.min(input.scrollHeight, 120) + "px"; }
+  input.addEventListener("input", autosize);
+  input.addEventListener("keydown", e => {
+    if (e.key === "Enter" && !e.shiftKey && matchMedia("(pointer:fine)").matches){ e.preventDefault(); send(); }
+  });
+  $("#sendBtn").onclick = send;
+
+  function send(){
+    const text = input.value.trim();
+    if (!text || !currentOther) return;
+    input.value = ""; autosize(); input.focus();
+    const id = chatId(me, currentOther);
+    const members = [me, currentOther].sort();
+    const batch = writeBatch(db);
+    batch.set(doc(collection(db, "chats", id, "messages")),
+      { from: me, text, createdAt: serverTimestamp(), clientAt: Date.now() });
+    batch.set(doc(db, "chats", id),
+      { members, lastMessage: text.slice(0, 120), lastFrom: me, lastAt: serverTimestamp() }, { merge: true });
+    // Tidak di-await: saat offline pesan masuk antrean dan terkirim sendiri saat online
+    batch.commit().catch(e => toast(e.code === "permission-denied" ? "Pesan ditolak server (cek aturan Firestore)." : "Pesan gagal terkirim."));
+  }
+
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden && currentOther) setRead(chatId(me, currentOther));
+  });
+}
+</script>
+</body>
+</html>
