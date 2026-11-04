@@ -103,6 +103,18 @@ textarea.field{min-height:150px;resize:vertical;font-family:ui-monospace,monospa
 .row .btn{flex:1}
 .note{color:var(--sub);font-size:12px;margin:0;line-height:1.5}
 
+.av.ai{background:linear-gradient(135deg,#7c3aed,#2563eb 55%,#06b6d4);font-size:18px}
+.msg.ai{max-width:90%}
+.msg.ai pre{margin:6px 0;padding:8px 10px;background:rgba(0,0,0,.35);color:#f2f2f5;border-radius:8px;overflow:auto;font-size:12.5px;white-space:pre;max-width:100%}
+.msg.ai code{font-family:ui-monospace,monospace;font-size:13px;background:rgba(128,128,128,.25);padding:1px 4px;border-radius:4px}
+.msg.ai pre code{background:none;padding:0}
+.typing span{display:inline-block;width:7px;height:7px;margin:3px 2px;border-radius:50%;background:var(--sub);animation:blink 1.2s infinite}
+.typing span:nth-child(2){animation-delay:.2s}
+.typing span:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,80%,100%{opacity:.25}40%{opacity:1}}
+.chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:12px}
+.chip{border:1px solid var(--acc);background:transparent;color:var(--acc);border-radius:16px;padding:7px 12px;font-size:13px;cursor:pointer}
+.msg.err{align-self:center;background:#3b1d1d;color:#fecaca;font-size:13px;text-align:center}
 #modal{position:absolute;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;padding:20px;z-index:20}
 #modal.show{display:flex}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px;width:100%;max-width:380px;display:flex;flex-direction:column;gap:10px}
@@ -171,6 +183,7 @@ textarea.field{min-height:150px;resize:vertical;font-family:ui-monospace,monospa
         <button class="icon-btn" id="backBtn" aria-label="Kembali">&#x2190;</button>
         <div class="av" id="chatAv"></div>
         <div class="title"><b id="chatName"></b><span id="chatSub"></span></div>
+        <button class="icon-btn" id="aiClear" aria-label="Hapus riwayat AI" style="display:none">&#x1F5D1;</button>
       </header>
       <div id="msgs"></div>
       <div class="composer">
@@ -652,6 +665,7 @@ function boot(cfg){
   function renderList(){
     if (!me) return;
     const box = $("#chatList"); box.textContent = "";
+    box.append(aiListItem());
     const rows = chats.map(c => {
       const other = c.members.find(m => m !== me) || me;
       const last = tsMs(c.lastAt) || tsMs(c.createdAt) || 0;
@@ -813,9 +827,163 @@ function boot(cfg){
       });
   };
 
+  /* ----- Chatku AI (asisten seperti Meta AI) ----- */
+  const AI_ID = "__ai";
+  const AI_ENDPOINT = "https://text.pollinations.ai/openai"; // layanan AI gratis, tanpa API key
+  const AI_MODELS = ["openai", "mistral"];                    // model cadangan jika yang pertama gagal
+  let aiBusy = false, aiErr = "";
+  const aiKey = () => "chatku_ai:" + me;
+  function aiLoad(){ try { const a = JSON.parse(lsGet(aiKey()) || "[]"); return Array.isArray(a) ? a : []; } catch { return []; } }
+  function aiSave(h){ lsSet(aiKey(), JSON.stringify(h.slice(-60))); }
+
+  function aiSystem(){
+    const now = new Date().toLocaleString("id-ID", { dateStyle: "full", timeStyle: "short" });
+    return "Kamu adalah Chatku AI, asisten AI di dalam aplikasi chat Chatku, mirip Meta AI di WhatsApp. " +
+      "Jawab dengan bahasa yang dipakai pengguna (utamanya Bahasa Indonesia): ramah, jelas, tidak bertele-tele, dan mudah dibaca di layar HP. " +
+      "Kamu boleh menjawab pertanyaan apa saja: pelajaran, coding, tips, ide, terjemahan, dan ngobrol santai. " +
+      "Kamu tidak bisa membuka internet, jadi jangan mengarang berita terbaru; jika tidak yakin, katakan terus terang. " +
+      "Tolak dengan sopan permintaan yang berbahaya atau ilegal. " +
+      "Waktu sekarang: " + now + ". Nama pengguna: " + dispName(me) + ".";
+  }
+
+  async function aiAsk(history){
+    const messages = [{ role: "system", content: aiSystem() }]
+      .concat(history.slice(-20).map(m => ({ role: m.role, content: m.content })));
+    let lastErr;
+    for (const model of AI_MODELS){
+      const ctl = new AbortController();
+      const timer = setTimeout(() => ctl.abort(), 45000);
+      try {
+        const r = await fetch(AI_ENDPOINT, {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ model, messages }), signal: ctl.signal
+        });
+        if (!r.ok) throw new Error("http " + r.status);
+        const j = await r.json();
+        const txt = j && j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content;
+        if (txt && txt.trim()) return txt.trim();
+        throw new Error("kosong");
+      } catch (e) { lastErr = e; }
+      finally { clearTimeout(timer); }
+    }
+    throw lastErr;
+  }
+
+  function addInline(parent, text){
+    text.split(/(\*\*[^*]+\*\*|`[^`]+`)/).forEach(p => {
+      if (!p) return;
+      if (p.length > 4 && p.startsWith("**") && p.endsWith("**")) parent.append(el("b", "", p.slice(2, -2)));
+      else if (p.length > 2 && p.startsWith("`") && p.endsWith("`")) parent.append(el("code", "", p.slice(1, -1)));
+      else parent.append(document.createTextNode(p));
+    });
+  }
+  function aiBody(text){
+    const wrap = el("span", "txt");
+    text = text.replace(/^#{1,6}\s*/gm, "");
+    text.split("```").forEach((seg, i) => {
+      if (i % 2){
+        const pre = el("pre");
+        pre.append(el("code", "", seg.replace(/^[\w+#.-]*\n/, "").replace(/\n$/, "")));
+        wrap.append(pre);
+      } else {
+        addInline(wrap, seg.replace(/^\n/, "").replace(/\n$/, ""));
+      }
+    });
+    return wrap;
+  }
+
+  function aiListItem(){
+    const it = el("div", "item");
+    const av = el("div", "av ai", "\u2728");
+    const mid = el("div", "mid");
+    mid.append(el("div", "name", "Chatku AI"));
+    const h = aiLoad(), last = h[h.length - 1];
+    mid.append(el("div", "prev", last ? (last.role === "user" ? "Kamu: " : "") + last.content.replace(/\s+/g, " ") : "Tanya apa saja ke AI"));
+    it.append(av, mid);
+    it.onclick = () => openAi();
+    return it;
+  }
+
+  function renderAi(){
+    if (currentOther !== AI_ID) return;
+    const box = $("#msgs"); box.textContent = "";
+    const h = aiLoad();
+    if (!h.length && !aiBusy){
+      const hint = el("div", "hint", "Halo! Aku Chatku AI. Tanya apa saja, aku siap bantu.");
+      const chips = el("div", "chips");
+      ["Jelaskan cara kerja internet", "Buatkan 5 ide konten TikTok", "Terjemahkan ke Inggris: selamat pagi"].forEach(q => {
+        const b = el("button", "chip", q); b.type = "button"; b.onclick = () => sendAi(q); chips.append(b);
+      });
+      hint.append(chips); box.append(hint);
+    }
+    let lastMs = 0;
+    h.forEach(m => {
+      const ms = m.t || Date.now();
+      if (!lastMs || !sameDay(lastMs, ms)) box.append(el("div", "day", dayLabel(ms)));
+      lastMs = ms;
+      const mine = m.role === "user";
+      const row = el("div", "msg " + (mine ? "me" : "them ai"));
+      if (mine) row.append(el("span", "txt", m.content)); else row.append(aiBody(m.content));
+      row.append(el("span", "meta", fmtTime(ms)));
+      box.append(row);
+    });
+    if (aiBusy){
+      const row = el("div", "msg them typing");
+      row.append(el("span"), el("span"), el("span"));
+      box.append(row);
+    }
+    if (aiErr) box.append(el("div", "msg err", aiErr));
+    box.scrollTop = box.scrollHeight;
+  }
+
+  function openAi(){
+    if (unsubMsgs){ unsubMsgs(); unsubMsgs = null; }
+    currentOther = AI_ID; aiErr = "";
+    fillChatHeader();
+    applyWall();
+    showScreen("chat");
+    history.pushState({ chat: AI_ID }, "");
+    renderAi();
+  }
+
+  async function sendAi(text){
+    if (aiBusy) { toast("Tunggu AI selesai menjawab."); return; }
+    aiErr = ""; aiBusy = true;
+    const h = aiLoad(); h.push({ role: "user", content: text, t: Date.now() }); aiSave(h);
+    renderAi();
+    try {
+      const ans = await aiAsk(h);
+      const h2 = aiLoad(); h2.push({ role: "assistant", content: ans, t: Date.now() }); aiSave(h2);
+    } catch (e) {
+      const h2 = aiLoad(); h2.pop(); aiSave(h2);   // batalkan pesan yang gagal dan kembalikan ke kolom ketik
+      aiErr = navigator.onLine
+        ? "AI sedang sibuk atau tidak merespons. Pesanmu dikembalikan ke kolom ketik, coba kirim lagi."
+        : "Kamu sedang offline. AI butuh internet.";
+      if (currentOther === AI_ID && !input.value){ input.value = text; autosize(); }
+    }
+    aiBusy = false;
+    if (currentOther === AI_ID) renderAi(); else renderList();
+  }
+
+  $("#aiClear").onclick = () => {
+    if (aiBusy){ toast("Tunggu AI selesai menjawab."); return; }
+    if (!confirm("Hapus semua riwayat chat dengan AI?")) return;
+    aiSave([]); aiErr = ""; renderAi();
+  };
+
   /* ----- layar chat ----- */
   function fillChatHeader(){
     if (!currentOther) return;
+    const chatAv = $("#chatAv");
+    if (currentOther === AI_ID){
+      chatAv.className = "av ai"; chatAv.style.background = ""; chatAv.textContent = "\u2728";
+      $("#chatName").textContent = "Chatku AI";
+      $("#chatSub").textContent = "Asisten AI \u00B7 tanya apa saja";
+      $("#aiClear").style.display = "";
+      return;
+    }
+    $("#aiClear").style.display = "none";
+    chatAv.className = "av";
     avatar($("#chatAv"), currentOther);
     $("#chatName").textContent = dispName(currentOther);
     $("#chatSub").textContent = "@" + currentOther;
@@ -882,6 +1050,12 @@ function boot(cfg){
   function send(){
     const text = input.value.trim();
     if (!text || !currentOther) return;
+    if (currentOther === AI_ID){
+      if (aiBusy){ toast("Tunggu AI selesai menjawab."); return; }
+      input.value = ""; autosize(); input.focus();
+      sendAi(text);
+      return;
+    }
     input.value = ""; autosize(); input.focus();
     const id = chatId(me, currentOther);
     const members = [me, currentOther].sort();
@@ -895,7 +1069,7 @@ function boot(cfg){
   }
 
   document.addEventListener("visibilitychange", () => {
-    if (!document.hidden && currentOther) setRead(chatId(me, currentOther));
+    if (!document.hidden && currentOther && currentOther !== AI_ID) setRead(chatId(me, currentOther));
   });
 }
 </script>
