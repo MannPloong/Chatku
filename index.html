@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="id" data-theme="dark">
 <head>
-<!-- Talvo build 2026-11-05d -->
+<!-- Talvo build 2026-11-05e -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <meta name="theme-color" content="#05070d">
 <title>Talvo</title>
 <script>try{var t=localStorage.getItem("chatku_theme");document.documentElement.setAttribute("data-theme",t==="light"?"light":"dark")}catch(e){}</script>
-<link id="manifestLink" rel="manifest" href="data:application/json,%7B%7D">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/svg+xml" href="data:,">
 <style>
 :root{
@@ -479,15 +480,7 @@ if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
   navigator.serviceWorker.register("sw.js").catch(() => {});
 }
 
-/* ---------- Manifest dan aturan Firestore tertanam ---------- */
-try {
-  const manifest = {
-    name: "Talvo", short_name: "Talvo", display: "standalone",
-    start_url: location.href.split("#")[0], background_color: "#05070d", theme_color: "#05070d",
-    icons: [{ src: ICON, sizes: "any", type: "image/svg+xml" }]
-  };
-  $("#manifestLink").href = URL.createObjectURL(new Blob([JSON.stringify(manifest)], { type: "application/manifest+json" }));
-} catch {}
+/* ---------- Aturan Firestore tertanam ---------- */
 
 const RULES = `rules_version = '2';
 service cloud.firestore {
