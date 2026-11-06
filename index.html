@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="id" data-theme="dark">
 <head>
-<!-- Talvo build 2026-11-05e -->
+<!-- Talvo build 2026-11-06a -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <meta name="theme-color" content="#05070d">
@@ -188,6 +188,64 @@ textarea.field{min-height:150px;resize:vertical;font-family:ui-monospace,monospa
 .fbtag.bug{background:#ef4444}.fbtag.lainnya{background:#64748b}
 .fbtext{margin-top:6px;white-space:pre-wrap;word-break:break-word;font-size:14px;line-height:1.5}
 .fbdel{margin-top:8px;background:none;border:0;color:#ef4444;font-size:12px;cursor:pointer;padding:0}
+
+.fab{bottom:calc(84px + env(safe-area-inset-bottom))}
+#list.tab-stories .fab{display:none}
+#list.tab-stories #chatList{display:none}
+#storiesPane{flex:1;overflow:auto;padding:10px 12px 24px;display:none}
+#list.tab-stories #storiesPane{display:block}
+.pane-in{animation:paneIn .32s ease}
+@keyframes paneIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+#nav{position:relative;display:flex;flex:none;margin:6px 14px calc(10px + env(safe-area-inset-bottom));padding:6px;background:var(--card);border:1px solid var(--line);border-radius:26px;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+#navPill{position:absolute;top:6px;bottom:6px;left:6px;width:calc(50% - 6px);border-radius:20px;background:var(--accg);transition:transform .5s cubic-bezier(.34,1.5,.5,1);box-shadow:0 4px 16px rgba(91,70,230,.45)}
+#list.tab-stories #navPill{transform:translateX(100%)}
+#navPill.bub{animation:bub .55s ease}
+@keyframes bub{0%{scale:1 1}30%{scale:1.16 .84}65%{scale:.97 1.06}100%{scale:1 1}}
+.navb{flex:1;position:relative;z-index:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:11px 0;background:none;border:0;color:var(--sub);font-size:14px;font-weight:700;cursor:pointer;transition:color .3s}
+.navb.on{color:#fff}
+.navb svg{transition:transform .4s cubic-bezier(.34,1.8,.5,1)}
+.navb.on svg{transform:scale(1.15)}
+#navDot{position:absolute;top:9px;right:calc(50% - 44px);width:9px;height:9px;border-radius:50%;background:#22d3ee;box-shadow:0 0 8px #22d3ee;display:none}
+.navb.on #navDot{border:2px solid #fff}
+.sav{padding:3px;border-radius:19px;background:var(--accg);flex:none;display:flex}
+.sav.seen{background:var(--line)}
+.sav.none{background:none;padding:1px;border:2px dashed var(--line);border-radius:19px}
+.sav .av{box-sizing:content-box;border:2px solid var(--card)}
+.sav.none .av{border:0}
+.item.me-story .av{width:44px;height:44px}
+.addst{width:36px;height:36px;border-radius:12px;border:0;background:var(--accg);color:#fff;font-size:22px;line-height:1;cursor:pointer;flex:none;display:flex;align-items:center;justify-content:center}
+#stCreate{position:absolute;inset:0;background:var(--bg);display:none;flex-direction:column;z-index:35}
+#stCreate.show{display:flex}
+#stcFrame{position:relative;width:100%;max-width:300px;margin:0 auto;aspect-ratio:9/14;max-height:50vh;border-radius:22px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#000}
+#stcText{width:100%;max-height:100%;border:0;outline:0;background:transparent;color:#fff;text-align:center;font-size:24px;font-weight:800;line-height:1.25;padding:18px;resize:none;font-family:inherit;overflow:auto}
+#stcText::placeholder{color:rgba(255,255,255,.7)}
+#stcImg{width:100%;height:100%;object-fit:contain}
+#stcColors{display:flex;gap:10px;justify-content:center;margin-top:14px;flex-wrap:wrap}
+#stcColors button{width:30px;height:30px;border-radius:50%;border:2px solid transparent;cursor:pointer;padding:0}
+#stcColors button.on{border-color:var(--txt);box-shadow:0 0 0 2px var(--bg) inset}
+#stView{position:absolute;inset:0;background:#000;display:none;flex-direction:column;z-index:45;color:#fff}
+#stView.show{display:flex}
+#stBars{display:flex;gap:4px;padding:calc(10px + env(safe-area-inset-top)) 10px 0;flex:none}
+.stseg{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,.3);overflow:hidden}
+.stseg i{display:block;height:100%;width:0;background:#fff}
+#stHead{display:flex;align-items:center;gap:10px;padding:10px 12px;flex:none}
+#stAv{width:38px;height:38px;border-radius:12px;font-size:15px}
+.stn{flex:1;min-width:0;line-height:1.25}
+.stn b{display:block;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stn span{font-size:12px;opacity:.8}
+.vbtn2{background:rgba(255,255,255,.16);color:#fff;border:0;border-radius:12px;font-size:24px;line-height:1;padding:7px 14px;cursor:pointer}
+#stBody{flex:1;min-height:0;position:relative;display:flex;align-items:center;justify-content:center;touch-action:manipulation;user-select:none;-webkit-user-select:none}
+#stImg{max-width:100%;max-height:100%;object-fit:contain;display:none;pointer-events:none}
+#stTxt{position:absolute;inset:0;display:none;align-items:center;justify-content:center;text-align:center;padding:30px;font-size:28px;font-weight:800;line-height:1.3;white-space:pre-wrap;word-break:break-word;pointer-events:none}
+#stCap{flex:none;padding:10px 22px 6px;text-align:center;font-size:15px;line-height:1.4;word-break:break-word;white-space:pre-wrap}
+#stFoot{flex:none;display:none;justify-content:space-between;align-items:center;padding:8px 16px calc(14px + env(safe-area-inset-bottom))}
+#stFoot button{background:rgba(255,255,255,.16);color:#fff;border:0;border-radius:12px;padding:10px 16px;font-size:14px;font-weight:700;cursor:pointer}
+#stFoot #stDel{color:#fca5a5}
+#stPanel{position:absolute;inset:0;background:rgba(0,0,0,.65);display:none;align-items:center;justify-content:center;padding:20px;z-index:3}
+#stPanel.show{display:flex}
+#stPanel .card{color:var(--txt)}
+.vrow{display:flex;justify-content:space-between;padding:9px 2px;border-bottom:1px solid var(--line);font-size:14px}
+.vrow span:last-child{color:var(--sub);font-size:12px}
 </style>
 </head>
 <body>
@@ -241,7 +299,20 @@ textarea.field{min-height:150px;resize:vertical;font-family:ui-monospace,monospa
         <button class="icon-btn" id="btnSettings" title="Pengaturan" aria-label="Pengaturan">&#x2699;</button>
       </header>
       <div id="chatList"></div>
+      <div id="storiesPane"></div>
       <button class="fab" id="fabAdd" aria-label="Tambah kontak"><span class="pl">+</span> Teman baru</button>
+      <nav id="nav">
+        <div id="navPill"></div>
+        <button class="navb on" id="tabChats" type="button">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg>
+          <span>Obrolan</span>
+        </button>
+        <button class="navb" id="tabStories" type="button">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9" stroke-dasharray="3.4 3"/><circle cx="12" cy="12" r="3.4"/></svg>
+          <span>Stories</span>
+          <i id="navDot"></i>
+        </button>
+      </nav>
     </section>
 
     <!-- CHAT -->
@@ -373,6 +444,51 @@ textarea.field{min-height:150px;resize:vertical;font-family:ui-monospace,monospa
     </div>
   </div>
 
+  <div id="stCreate">
+    <header class="bar">
+      <button class="icon-btn" id="stcClose" type="button" aria-label="Tutup">&times;</button>
+      <div class="bt"><h1>Story baru</h1><div class="who">Terlihat oleh temanmu selama 24 jam</div></div>
+    </header>
+    <div class="scroll" style="padding-top:12px">
+      <div class="seg" id="stcMode" style="margin-bottom:12px">
+        <button type="button" data-m="text" class="on">Teks</button>
+        <button type="button" data-m="image">Foto</button>
+      </div>
+      <div id="stcFrame">
+        <textarea id="stcText" maxlength="300" placeholder="Tulis sesuatu..." rows="1"></textarea>
+        <img id="stcImg" alt="">
+        <button class="btn" id="stcPick" type="button">Pilih foto</button>
+      </div>
+      <div id="stcColors"></div>
+      <button class="btn alt sm" id="stcRepick" type="button" style="margin-top:10px">Ganti foto</button>
+      <input class="field" id="stcCap" maxlength="200" placeholder="Tambahkan keterangan (opsional)" style="margin-top:10px">
+      <button class="btn" id="stcShare" type="button" style="width:100%;margin-top:14px">Bagikan story</button>
+      <input type="file" id="stcFile" accept="image/*" hidden>
+    </div>
+  </div>
+
+  <div id="stView">
+    <div id="stBars"></div>
+    <div id="stHead">
+      <div class="av" id="stAv"></div>
+      <div class="stn"><b id="stName"></b><span id="stWhen"></span></div>
+      <button class="vbtn2" id="stClose" type="button" aria-label="Tutup">&times;</button>
+    </div>
+    <div id="stBody"><img id="stImg" alt=""><div id="stTxt"></div></div>
+    <div id="stCap"></div>
+    <div id="stFoot">
+      <button id="stViewers" type="button">Dilihat 0</button>
+      <button id="stDel" type="button">Hapus</button>
+    </div>
+    <div id="stPanel">
+      <div class="card" style="max-height:80%;display:flex;flex-direction:column">
+        <h3>Dilihat oleh</h3>
+        <div id="stPList" style="overflow:auto;flex:1"></div>
+        <button class="btn" id="stPClose" type="button">Tutup</button>
+      </div>
+    </div>
+  </div>
+
   <div class="ovl" id="devModal">
     <div class="card" style="max-height:85%;display:flex;flex-direction:column">
       <h3>Saran masuk</h3>
@@ -490,6 +606,11 @@ service cloud.firestore {
       return request.auth.token.email.split('@')[0];
     }
 
+    // true jika dua username sudah berteman (ada dokumen chat di antara mereka)
+    function chatBetween(a, b) {
+      return exists(/databases/$(database)/documents/chats/$(a < b ? a + '~' + b : b + '~' + a));
+    }
+
     match /users/{username} {
       allow get: if request.auth != null;
       allow list: if false;
@@ -544,6 +665,33 @@ service cloud.firestore {
           && request.resource.data.data is string
           && request.resource.data.data.size() < 900000;
 
+        allow update, delete: if false;
+      }
+    }
+
+    match /stories/{sid} {
+      allow read: if request.auth != null
+        && (resource.data.owner == uname() || chatBetween(resource.data.owner, uname()));
+
+      allow create: if request.auth != null
+        && request.resource.data.owner == uname()
+        && request.resource.data.kind in ['text', 'image']
+        && request.resource.data.get('text', '').size() <= 300
+        && request.resource.data.get('caption', '').size() <= 200
+        && request.resource.data.get('img', '').size() < 600000
+        && request.resource.data.expiresAt is number
+        && request.resource.data.expiresAt <= request.time.toMillis() + 90000000;
+
+      allow update: if false;
+      allow delete: if request.auth != null && resource.data.owner == uname();
+
+      match /views/{viewer} {
+        allow create: if request.auth != null
+          && uname() == viewer
+          && get(/databases/$(database)/documents/stories/$(sid)).data.owner != uname()
+          && chatBetween(get(/databases/$(database)/documents/stories/$(sid)).data.owner, uname());
+        allow read: if request.auth != null
+          && get(/databases/$(database)/documents/stories/$(sid)).data.owner == uname();
         allow update, delete: if false;
       }
     }
@@ -710,7 +858,7 @@ function boot(cfg){
       updateMeLabel();
       if ($("#settings").classList.contains("active") && draftPhoto === undefined) paintSetAvatar();
     }
-    renderList();
+    renderList(); renderStories();
     if (currentOther === name) fillChatHeader();
   }
 
@@ -792,7 +940,7 @@ function boot(cfg){
       me = null; ensuring = null; chats = []; currentOther = null; draftPhoto = undefined;
       if (unsubChats){ unsubChats(); unsubChats = null; }
       if (unsubMsgs){ unsubMsgs(); unsubMsgs = null; }
-      clearProfiles();
+      clearProfiles(); clearStories(); closeStory(true); closeCreator(true); setTab("chats");
       $("#fPass").value = ""; setEye(false);
       showScreen("auth");
     }
@@ -804,7 +952,8 @@ function boot(cfg){
     const q = query(collection(db, "chats"), where("members", "array-contains", me));
     unsubChats = onSnapshot(q, snap => {
       chats = snap.docs.map(d => ({ id: d.id, ...d.data({ serverTimestamps: "estimate" }) }));
-      chats.forEach(c => { const o = c.members.find(m => m !== me); if (o) watchProfile(o); });
+      watchStories(me);
+      chats.forEach(c => { const o = c.members.find(m => m !== me); if (o){ watchProfile(o); watchStories(o); } });
       renderList();
       snap.docChanges().forEach(ch => {
         if (ch.type !== "modified") return;
@@ -1169,6 +1318,8 @@ function boot(cfg){
   }
   $("#backBtn").onclick = () => history.back();
   window.addEventListener("popstate", () => {
+    if ($("#stView").classList.contains("show")){ closeStory(true); return; }
+    if ($("#stCreate").classList.contains("show")){ closeCreator(true); return; }
     if ($("#chat").classList.contains("active")) leaveChat();
     else if ($("#settings").classList.contains("active")) showScreen("list");
   });
@@ -1498,6 +1649,267 @@ function boot(cfg){
   syncComposer();
 
   /* ----- saran untuk developer ----- */
+
+  /* ----- Stories ----- */
+  const STORY_MS = 86400000;
+  const SBG = ["linear-gradient(135deg,#3b82f6,#8b5cf6)", "linear-gradient(135deg,#ef4444,#f97316)", "linear-gradient(135deg,#10b981,#06b6d4)", "linear-gradient(135deg,#ec4899,#8b5cf6)", "linear-gradient(135deg,#f59e0b,#ef4444)", "linear-gradient(135deg,#0ea5e9,#2563eb)", "linear-gradient(135deg,#111827,#4b5563)", "linear-gradient(135deg,#84cc16,#16a34a)"];
+  const storyMap = new Map(), storyUnsubs = new Map(), cleaned = new Set();
+  let storyErr = false, tab = "chats";
+
+  const seenKey = () => "talvo_seen:" + me;
+  function seenSet(){ try { return JSON.parse(lsGet(seenKey()) || "{}") || {}; } catch { return {}; } }
+  function markSeen(id){ const x = seenSet(); if (x[id]) return; x[id] = 1; lsSet(seenKey(), JSON.stringify(x)); }
+  const sTime = x => x.clientAt || tsMs(x.createdAt) || 0;
+  function ago(ms){
+    const m = Math.floor((Date.now() - ms) / 60000);
+    if (m < 1) return "Baru saja";
+    if (m < 60) return m + " menit lalu";
+    return Math.floor(m / 60) + " jam lalu";
+  }
+  const activeStories = u => (storyMap.get(u) || []).filter(x => x.expiresAt > Date.now());
+
+  function watchStories(u){
+    if (storyUnsubs.has(u)) return;
+    const q = query(collection(db, "stories"), where("owner", "==", u));
+    const unsub = onSnapshot(q, snap => {
+      const list = snap.docs.map(d => ({ id: d.id, ...d.data({ serverTimestamps: "estimate" }) }));
+      if (u === me) list.forEach(x => {
+        if (x.expiresAt <= Date.now() && !cleaned.has(x.id)){ cleaned.add(x.id); deleteDoc(doc(db, "stories", x.id)).catch(() => {}); }
+      });
+      storyMap.set(u, list.filter(x => typeof x.expiresAt === "number" && x.expiresAt > Date.now()).sort((a, b) => sTime(a) - sTime(b)));
+      storyErr = false; renderStories();
+    }, err => { if (err.code === "permission-denied"){ storyErr = true; renderStories(); } });
+    storyUnsubs.set(u, unsub);
+  }
+  function clearStories(){
+    storyUnsubs.forEach(f => { try { f(); } catch {} });
+    storyUnsubs.clear(); storyMap.clear(); cleaned.clear();
+  }
+
+  function ringAv(u, state){
+    const w = el("div", "sav " + state);
+    const a = el("div", "av"); avatar(a, u); w.append(a);
+    return w;
+  }
+  function storyRow(u, sub, onclick, ringState){
+    const it = el("div", "item");
+    const mid = el("div", "mid");
+    mid.append(el("div", "name", dispName(u)), el("div", "prev", sub));
+    it.append(ringAv(u, ringState), mid);
+    it.onclick = onclick;
+    return it;
+  }
+  function renderStories(){
+    if (!me) return;
+    const seen = seenSet();
+    const friends = [...storyMap.keys()].filter(u => u !== me && activeStories(u).length);
+    const unseenF = friends.filter(u => activeStories(u).some(x => !seen[x.id]));
+    $("#navDot").style.display = unseenF.length ? "block" : "none";
+    if (tab !== "stories") return;
+
+    const box = $("#storiesPane"); box.textContent = "";
+    const my = activeStories(me);
+    const mine = el("div", "item me-story");
+    const mid = el("div", "mid");
+    mid.append(el("div", "name", "Story saya"),
+      el("div", "prev", my.length ? my.length + " story · " + ago(sTime(my[my.length - 1])) : "Bagikan teks atau foto ke temanmu"));
+    const add = el("button", "addst", "+"); add.type = "button"; add.setAttribute("aria-label", "Tambah story");
+    add.onclick = e => { e.stopPropagation(); openCreator(); };
+    mine.append(ringAv(me, my.length ? "" : "none"), mid, add);
+    mine.onclick = () => { if (my.length) openStory(me); else openCreator(); };
+    box.append(mine);
+
+    if (storyErr) box.append(el("div", "empty", "Stories belum aktif.\nAturan Firestore perlu diperbarui ke versi terbaru."));
+
+    const latest = u => { const l = activeStories(u); return sTime(l[l.length - 1]); };
+    const byNew = (a, b) => latest(b) - latest(a);
+    const seenF = friends.filter(u => !unseenF.includes(u));
+    if (unseenF.length){
+      box.append(el("div", "sect", "Baru"));
+      unseenF.sort(byNew).forEach(u => box.append(storyRow(u, ago(latest(u)), () => openStory(u), "")));
+    }
+    if (seenF.length){
+      box.append(el("div", "sect", "Sudah dilihat"));
+      seenF.sort(byNew).forEach(u => box.append(storyRow(u, ago(latest(u)), () => openStory(u), "seen")));
+    }
+    if (!friends.length && !storyErr) box.append(el("div", "empty", "Belum ada story dari temanmu.\nStory teman yang ada di daftar obrolan akan muncul di sini."));
+  }
+  setInterval(() => { if (me) renderStories(); }, 60000);
+
+  /* ----- tab bawah dengan bubble ----- */
+  function setTab(t){
+    tab = t;
+    $("#list").classList.toggle("tab-stories", t === "stories");
+    $("#tabChats").classList.toggle("on", t === "chats");
+    $("#tabStories").classList.toggle("on", t === "stories");
+    const pill = $("#navPill"); pill.classList.remove("bub"); void pill.offsetWidth; pill.classList.add("bub");
+    const pane = t === "stories" ? $("#storiesPane") : $("#chatList");
+    pane.classList.remove("pane-in"); void pane.offsetWidth; pane.classList.add("pane-in");
+    if (t === "stories") renderStories();
+  }
+  $("#tabChats").onclick = () => { if (tab !== "chats") setTab("chats"); };
+  $("#tabStories").onclick = () => { if (tab !== "stories") setTab("stories"); };
+
+  /* ----- pembuat story ----- */
+  const C = { mode: "text", bg: 0, img: "" };
+  function stcRender(){
+    const text = C.mode === "text";
+    $("#stcMode").querySelectorAll("button").forEach(b => b.classList.toggle("on", b.dataset.m === C.mode));
+    $("#stcFrame").style.background = text ? SBG[C.bg] : "#000";
+    $("#stcText").style.display = text ? "" : "none";
+    $("#stcColors").style.display = text ? "flex" : "none";
+    $("#stcImg").style.display = (!text && C.img) ? "" : "none";
+    $("#stcPick").style.display = (!text && !C.img) ? "" : "none";
+    $("#stcRepick").style.display = (!text && C.img) ? "" : "none";
+    $("#stcCap").style.display = (!text && C.img) ? "" : "none";
+    if (!text && C.img) $("#stcImg").src = C.img;
+    $("#stcColors").querySelectorAll("button").forEach((b, i) => b.classList.toggle("on", i === C.bg));
+  }
+  function stcAutosize(){ const t = $("#stcText"); t.style.height = "auto"; t.style.height = Math.min(t.scrollHeight, 330) + "px"; }
+  function openCreator(){
+    Object.assign(C, { mode: "text", bg: Math.floor(Math.random() * SBG.length), img: "" });
+    $("#stcText").value = ""; $("#stcCap").value = ""; stcAutosize();
+    const cb = $("#stcColors"); cb.textContent = "";
+    SBG.forEach((g, i) => { const b = el("button"); b.type = "button"; b.style.background = g; b.onclick = () => { C.bg = i; stcRender(); }; cb.append(b); });
+    $("#stCreate").classList.add("show");
+    history.pushState({ sc: 1 }, "");
+    stcRender();
+  }
+  function closeCreator(fromPop){
+    const o = $("#stCreate");
+    if (!o.classList.contains("show")) return;
+    o.classList.remove("show");
+    if (!fromPop) history.back();
+  }
+  $("#stcClose").onclick = () => closeCreator(false);
+  $("#stcMode").querySelectorAll("button").forEach(b => { b.onclick = () => { C.mode = b.dataset.m; stcRender(); }; });
+  $("#stcText").addEventListener("input", stcAutosize);
+  $("#stcPick").onclick = () => $("#stcFile").click();
+  $("#stcRepick").onclick = () => $("#stcFile").click();
+  $("#stcFile").onchange = async e => {
+    const f = e.target.files[0]; e.target.value = "";
+    if (!f) return;
+    toast("Memproses foto...");
+    try {
+      let q = 0.78, d = await resizeImage(f, 1080, q, false);
+      while (d.length > 480000 && q > 0.4){ q -= 0.1; d = await resizeImage(f, 1080, q, false); }
+      if (d.length > 480000) d = await resizeImage(f, 800, 0.5, false);
+      if (d.length > 560000){ toast("Foto terlalu besar."); return; }
+      C.img = d; stcRender();
+    } catch { toast("Foto tidak bisa dibaca."); }
+  };
+  $("#stcShare").onclick = () => {
+    const now = Date.now();
+    const base = { owner: me, createdAt: serverTimestamp(), clientAt: now, expiresAt: now + STORY_MS };
+    let data;
+    if (C.mode === "text"){
+      const t = $("#stcText").value.trim();
+      if (!t){ toast("Tulis sesuatu dulu."); return; }
+      data = Object.assign({}, base, { kind: "text", text: t.slice(0, 300), bg: C.bg });
+    } else {
+      if (!C.img){ toast("Pilih foto dulu."); return; }
+      data = Object.assign({}, base, { kind: "image", img: C.img, caption: $("#stcCap").value.trim().slice(0, 200) });
+    }
+    setDoc(doc(collection(db, "stories")), data)
+      .catch(e => toast(e.code === "permission-denied" ? "Ditolak server. Perbarui aturan Firestore ke versi terbaru." : "Story gagal dikirim."));
+    closeCreator(false); setTab("stories"); toast("Story dibagikan.");
+  };
+
+  /* ----- penampil story ----- */
+  const V = { user: null, list: [], i: 0, elapsed: 0, dur: 5500, timer: null, hold: false, panel: false, fill: null };
+  function openStory(u){
+    const list = activeStories(u); if (!list.length) return;
+    const seen = seenSet();
+    let start = 0;
+    if (u !== me){ const k = list.findIndex(x => !seen[x.id]); start = k < 0 ? 0 : k; }
+    Object.assign(V, { user: u, list, i: start, hold: false, panel: false });
+    $("#stView").classList.add("show");
+    history.pushState({ st: 1 }, "");
+    showStory();
+  }
+  function showStory(){
+    clearInterval(V.timer);
+    const x = V.list[V.i]; if (!x){ closeStory(false); return; }
+    const bars = $("#stBars"); bars.textContent = "";
+    V.list.forEach((_, i) => { const sg = el("div", "stseg"), f = el("i"); f.style.width = i < V.i ? "100%" : "0"; sg.append(f); bars.append(sg); if (i === V.i) V.fill = f; });
+    avatar($("#stAv"), V.user);
+    $("#stName").textContent = V.user === me ? "Story saya" : dispName(V.user);
+    $("#stWhen").textContent = ago(sTime(x));
+    const img = $("#stImg"), txt = $("#stTxt");
+    if (x.kind === "image"){
+      img.src = x.img; img.style.display = "block"; txt.style.display = "none";
+      $("#stCap").textContent = x.caption || ""; V.dur = 6500;
+    } else {
+      img.style.display = "none"; txt.style.display = "flex";
+      txt.textContent = x.text || ""; txt.style.background = SBG[x.bg] || SBG[0];
+      $("#stCap").textContent = ""; V.dur = 5500;
+    }
+    const own = V.user === me;
+    $("#stFoot").style.display = own ? "flex" : "none";
+    if (own){
+      $("#stViewers").textContent = "Dilihat ...";
+      getDocs(collection(db, "stories", x.id, "views")).then(snap => {
+        x._views = snap.docs.map(d => ({ u: d.id, at: d.data().at }));
+        if (V.list[V.i] === x) $("#stViewers").textContent = "Dilihat " + x._views.length;
+      }).catch(() => { if (V.list[V.i] === x) $("#stViewers").textContent = "Dilihat -"; });
+    } else if (!seenSet()[x.id]){
+      setDoc(doc(db, "stories", x.id, "views", me), { at: serverTimestamp() }).catch(() => {});
+    }
+    markSeen(x.id);
+    V.elapsed = 0;
+    V.timer = setInterval(() => {
+      if (V.hold || V.panel) return;
+      V.elapsed += 40;
+      if (V.fill) V.fill.style.width = Math.min(100, V.elapsed / V.dur * 100) + "%";
+      if (V.elapsed >= V.dur) nextStory();
+    }, 40);
+  }
+  function nextStory(){ if (V.i < V.list.length - 1){ V.i++; showStory(); } else closeStory(false); }
+  function prevStory(){ if (V.i > 0) V.i--; showStory(); }
+  function closeStory(fromPop){
+    const o = $("#stView");
+    clearInterval(V.timer);
+    if (!o.classList.contains("show")) return;
+    o.classList.remove("show"); $("#stPanel").classList.remove("show");
+    if (!fromPop) history.back();
+    renderStories();
+  }
+  let pd = null;
+  const sbody = $("#stBody");
+  sbody.addEventListener("pointerdown", e => { pd = { t: Date.now(), x: e.clientX }; V.hold = true; });
+  const endPress = e => {
+    if (!pd) return;
+    const quick = Date.now() - pd.t < 280, px = pd.x; pd = null; V.hold = false;
+    if (!quick || e.type === "pointercancel") return;
+    const r = sbody.getBoundingClientRect();
+    if (px - r.left < r.width * 0.33) prevStory(); else nextStory();
+  };
+  sbody.addEventListener("pointerup", endPress);
+  sbody.addEventListener("pointercancel", endPress);
+  $("#stClose").onclick = () => closeStory(false);
+  $("#stDel").onclick = async () => {
+    const x = V.list[V.i]; if (!x) return;
+    V.panel = true;
+    if (!confirm("Hapus story ini?")){ V.panel = false; return; }
+    try { await deleteDoc(doc(db, "stories", x.id)); } catch { toast("Gagal menghapus."); V.panel = false; return; }
+    V.list.splice(V.i, 1);
+    V.panel = false;
+    if (!V.list.length) closeStory(false); else { if (V.i >= V.list.length) V.i = V.list.length - 1; showStory(); }
+  };
+  $("#stViewers").onclick = () => {
+    const x = V.list[V.i]; if (!x) return;
+    const box = $("#stPList"); box.textContent = "";
+    const vs = (x._views || []).slice().sort((a, b) => (tsMs(b.at) || 0) - (tsMs(a.at) || 0));
+    if (!vs.length) box.append(el("div", "note", "Belum ada yang melihat."));
+    vs.forEach(v => {
+      watchProfile(v.u);
+      const r = el("div", "vrow"); r.append(el("span", "", dispName(v.u)), el("span", "", tsMs(v.at) ? ago(tsMs(v.at)) : ""));
+      box.append(r);
+    });
+    V.panel = true; $("#stPanel").classList.add("show");
+  };
+  $("#stPClose").onclick = () => { V.panel = false; $("#stPanel").classList.remove("show"); };
+
   /* ----- panel developer: hanya untuk akun @salman ----- */
   const DEV = "salman";
   async function devLoad(){
