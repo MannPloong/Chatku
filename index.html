@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="id" data-theme="dark">
 <head>
-<!-- Talvo build 2026-11-06a -->
+<!-- Talvo build 2026-11-07a -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
-<meta name="theme-color" content="#05070d">
+<meta name="theme-color" content="#14181d">
 <title>Talvo</title>
 <script>try{var t=localStorage.getItem("chatku_theme");document.documentElement.setAttribute("data-theme",t==="light"?"light":"dark")}catch(e){}</script>
 <link rel="manifest" href="manifest.json">
@@ -12,15 +12,17 @@
 <link rel="icon" type="image/svg+xml" href="data:,">
 <style>
 :root{
-  --acc:#5b8cff; --accg:linear-gradient(135deg,#3b82f6,#8b5cf6);
-  --bg:#05070d; --panel:#0a0d16; --head:rgba(10,13,22,.86); --card:#101523; --card2:#161c2e;
-  --me:linear-gradient(135deg,#2563eb,#7c3aed); --them:#141a2b;
-  --txt:#eef1f8; --sub:#8791a8; --line:#1c2336; --field:#111726;
+  --acc:#3b82f6; --accg:#3b82f6; --accsoft:rgba(59,130,246,.16);
+  --bg:#0f1216; --panel:#14181d; --head:#14181d; --card:#1a1f26; --card2:#222831;
+  --me:#2f6fed; --them:#1a1f26;
+  --txt:#e9ecf1; --sub:#8a93a1; --line:#262c35; --field:#161b21;
   color-scheme:dark;
 }
 :root[data-theme="light"]{
-  --acc:#4f6df5; --bg:#f1f4fb; --panel:#f7f9fd; --head:rgba(255,255,255,.9); --card:#ffffff; --card2:#eef2fb;
-  --them:#ffffff; --txt:#0e1424; --sub:#6a7590; --line:#e3e8f4; --field:#ffffff;
+  --acc:#2563eb; --accg:#2563eb; --accsoft:rgba(37,99,235,.10);
+  --bg:#f4f5f7; --panel:#ffffff; --head:#ffffff; --card:#ffffff; --card2:#f0f2f5;
+  --me:#2563eb; --them:#ffffff;
+  --txt:#15181d; --sub:#667085; --line:#e3e6eb; --field:#ffffff;
   color-scheme:light;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -246,6 +248,89 @@ textarea.field{min-height:150px;resize:vertical;font-family:ui-monospace,monospa
 #stPanel .card{color:var(--txt)}
 .vrow{display:flex;justify-content:space-between;padding:9px 2px;border-bottom:1px solid var(--line);font-size:14px}
 .vrow span:last-child{color:var(--sub);font-size:12px}
+
+/* ===== tampilan simpel dan modern ===== */
+header.bar{backdrop-filter:none;-webkit-backdrop-filter:none}
+header.bar h1{font-weight:700;letter-spacing:0}
+header.bar .bt h1{background:none;-webkit-background-clip:border-box;background-clip:border-box;color:var(--txt);font-size:20px;font-weight:700}
+.mark{border-radius:10px}
+.mark.big{border-radius:16px}
+.icon-btn{display:flex;align-items:center;justify-content:center;width:38px;height:38px;padding:0;border-radius:10px;background:transparent;border:1px solid var(--line)}
+.field{border-radius:10px}
+.field:focus{box-shadow:0 0 0 3px var(--accsoft)}
+.btn{border-radius:10px;font-weight:600}
+.btn.dangerfill{background:#dc2626;color:#fff;border:0}
+.item{border-radius:12px}
+.item.ai-card{background:var(--card);border-color:var(--line);box-shadow:none}
+.dot{background:var(--acc);box-shadow:none}
+.tag{border-radius:5px;letter-spacing:.04em}
+.av{border-radius:12px}
+.av.big{border-radius:18px}
+.fab{border-radius:12px;padding:13px 20px;box-shadow:0 2px 10px rgba(0,0,0,.3);bottom:calc(74px + env(safe-area-inset-bottom))}
+.msg{border-radius:14px}
+.msg.me{border-bottom-right-radius:4px}
+.msg.them{border-bottom-left-radius:4px}
+.day{border-radius:8px;letter-spacing:.04em}
+.hint{border-radius:12px}
+.composer textarea{border-radius:12px}
+.send,.ic{border-radius:10px}
+.card{border-radius:14px}
+#toast{border-radius:10px;background:#2b313b}
+.seg{border-radius:10px}
+.fbtag,.filebig{border-radius:8px}
+.addst{border-radius:10px}
+#nav{margin:0;border-radius:0;border:0;border-top:1px solid var(--line);background:var(--panel);padding:6px 12px calc(6px + env(safe-area-inset-bottom));box-shadow:none}
+#navPill{left:12px;top:6px;bottom:calc(6px + env(safe-area-inset-bottom));width:calc(50% - 12px);border-radius:12px;background:var(--accsoft);box-shadow:none}
+.navb{border-radius:12px;color:var(--sub);font-weight:600}
+.navb.on{color:var(--acc)}
+#navDot{background:var(--acc);box-shadow:none;border:2px solid var(--panel)}
+.navb.on #navDot{border:2px solid var(--panel)}
+.sav{border-radius:15px}
+.sav.none{border-radius:15px}
+
+/* status pesan */
+.msg .meta{display:flex;justify-content:flex-end;align-items:center;gap:4px}
+.tick{display:inline-flex}
+.tick svg{display:block}
+.tick.wait,.tick.sent{opacity:.7}
+.msg.me .tick.read{color:#fff}
+
+/* hapus kontak */
+#cmenu{position:absolute;top:50px;right:10px;display:none;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden;z-index:15;box-shadow:0 6px 20px rgba(0,0,0,.35)}
+#cmenu.show{display:flex}
+#cmenu button{background:none;border:0;color:#ef4444;padding:12px 18px;font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap}
+#goneBar{display:none;flex:none;align-items:flex-start;gap:10px;padding:12px 14px calc(12px + env(safe-area-inset-bottom));background:var(--card);border-top:1px solid var(--line);color:var(--sub);font-size:13px;line-height:1.45}
+#goneBar.show{display:flex}
+#goneBar svg{flex:none;margin-top:1px;color:#ef4444}
+.composer.nosend{display:none}
+.item .prev.warn{color:#ef4444}
+
+/* pengaturan */
+#settings .scroll{padding:6px 14px 30px}
+.gt{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--sub);margin:20px 4px 8px}
+.pcard{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.fl{display:flex;flex-direction:column;gap:6px}
+#settings .lbl{font-size:13px;font-weight:600;color:var(--sub);margin:0}
+.hr{height:1px;background:var(--line);margin:2px 0}
+.walls{gap:8px}
+.wall{border-radius:10px}
+.tswitch{position:relative;display:flex;background:var(--card2);border-radius:10px;padding:4px}
+.tthumb{position:absolute;top:4px;bottom:4px;left:4px;width:calc(50% - 4px);border-radius:7px;background:var(--acc);transition:transform .45s cubic-bezier(.34,1.45,.5,1)}
+:root[data-theme="light"] .tswitch .tthumb{transform:translateX(100%)}
+.tswitch button{flex:1;position:relative;z-index:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:11px 0;border:0;background:none;color:var(--sub);font-size:14px;font-weight:600;cursor:pointer;transition:color .3s}
+.tswitch button.on{color:#fff}
+.tswitch button.on svg{animation:ico .6s cubic-bezier(.34,1.8,.5,1)}
+@keyframes ico{from{transform:rotate(-80deg) scale(.4);opacity:0}to{transform:none;opacity:1}}
+.fbbox{display:flex;align-items:center;gap:14px;text-align:left;width:100%;cursor:pointer;color:var(--txt);border:1px solid var(--line);background:var(--card);border-radius:14px;padding:16px}
+.fbbox:active{background:var(--card2)}
+.fbi{width:42px;height:42px;border-radius:10px;background:var(--accsoft);color:var(--acc);display:flex;align-items:center;justify-content:center;flex:none}
+.fbm{flex:1;min-width:0}
+.fbt,.fbs{display:block}
+.fbt{font-size:15px;font-weight:700}
+.fbs{margin-top:4px}
+
+/* transisi halus saat ganti tema */
+html.theming :where(body,#app,header,section,div,button,input,textarea,span,nav,i,b,p,label,svg){transition:background-color .35s ease,color .35s ease,border-color .35s ease}
 </style>
 </head>
 <body>
@@ -296,7 +381,7 @@ textarea.field{min-height:150px;resize:vertical;font-family:ui-monospace,monospa
     <section class="screen" id="list">
       <header class="bar">
         <img class="mark js-icon" alt="" width="36" height="36"><div class="bt"><h1>Talvo</h1><div class="who" id="meName"></div></div>
-        <button class="icon-btn" id="btnSettings" title="Pengaturan" aria-label="Pengaturan">&#x2699;</button>
+        <button class="icon-btn" id="btnSettings" title="Pengaturan" aria-label="Pengaturan"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg></button>
       </header>
       <div id="chatList"></div>
       <div id="storiesPane"></div>
@@ -318,34 +403,37 @@ textarea.field{min-height:150px;resize:vertical;font-family:ui-monospace,monospa
     <!-- CHAT -->
     <section class="screen" id="chat">
       <header class="bar">
-        <button class="icon-btn" id="backBtn" aria-label="Kembali">&#x2190;</button>
+        <button class="icon-btn" id="backBtn" aria-label="Kembali"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
         <div class="av" id="chatAv"></div>
         <div class="title"><b id="chatName"></b><span id="chatSub"></span></div>
-        <button class="icon-btn" id="aiClear" aria-label="Hapus riwayat AI" style="display:none">&#x1F5D1;</button>
+        <button class="icon-btn" id="aiClear" aria-label="Hapus riwayat AI" style="display:none"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></svg></button>
+        <button class="icon-btn" id="chatMenu" aria-label="Menu" style="display:none"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><circle cx="12" cy="5" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="12" cy="19" r="1.7"/></svg></button>
       </header>
+      <div id="cmenu"><button id="cmDel" type="button">Hapus kontak</button></div>
       <div id="msgs"></div>
+      <div id="goneBar"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.01"/></svg><span id="goneTxt"></span></div>
       <div class="composer">
         <button class="ic" id="attachBtn" type="button" aria-label="Lampirkan"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
         <textarea id="msgInput" rows="1" placeholder="Tulis pesan..." maxlength="2000"></textarea>
         <button class="send" id="micBtn" type="button" aria-label="Pesan suara"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button>
-        <button class="send" id="sendBtn" aria-label="Kirim">&#x2191;</button>
+        <button class="send" id="sendBtn" aria-label="Kirim"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
       </div>
       <div class="recbar" id="recBar">
         <span class="recdot"></span><span id="recTime">0:00</span><span class="rectxt">Merekam suara...</span>
         <button class="rbtn" id="recCancel" type="button">Batal</button>
-        <button class="send" id="recSend" type="button" aria-label="Kirim pesan suara">&#x2191;</button>
+        <button class="send" id="recSend" type="button" aria-label="Kirim pesan suara"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
       </div>
     </section>
 
     <!-- SETTINGS -->
     <section class="screen" id="settings">
       <header class="bar">
-        <button class="icon-btn" id="setBack" aria-label="Kembali">&#x2190;</button>
+        <button class="icon-btn" id="setBack" aria-label="Kembali"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
         <h1>Pengaturan</h1>
       </header>
       <div class="scroll">
-        <div class="sec">
-          <h3>Profil</h3>
+        <div class="gt">Profil</div>
+        <div class="pcard">
           <div class="prof">
             <div class="av big" id="setAv"></div>
             <div class="prof-actions">
@@ -354,45 +442,44 @@ textarea.field{min-height:150px;resize:vertical;font-family:ui-monospace,monospa
             </div>
             <input type="file" id="photoFile" accept="image/*" hidden>
           </div>
-          <div class="lbl">Nama tampilan (dilihat temanmu)</div>
-          <input class="field" id="setName" maxlength="30" placeholder="Nama kamu">
-          <div class="lbl">Username (tetap, dipakai untuk masuk)</div>
-          <input class="field" id="setUser" disabled>
+          <label class="fl"><span class="lbl">Nama tampilan</span><input class="field" id="setName" maxlength="30" placeholder="Nama kamu"></label>
+          <label class="fl"><span class="lbl">Username</span><input class="field" id="setUser" disabled></label>
+          <p class="note">Nama tampilan dilihat temanmu. Username tetap dan dipakai untuk masuk.</p>
           <div class="err" id="profErr"></div>
           <button class="btn" id="profSave" type="button">Simpan profil</button>
         </div>
 
-        <div class="sec">
-          <h3>Tema</h3>
-          <div class="seg">
-            <button id="thDark" type="button">Gelap</button>
-            <button id="thLight" type="button">Terang</button>
+        <div class="gt">Tampilan</div>
+        <div class="pcard">
+          <div class="lbl">Tema</div>
+          <div class="tswitch" id="tsw">
+            <i class="tthumb"></i>
+            <button id="thDark" type="button"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg><span>Gelap</span></button>
+            <button id="thLight" type="button"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><span>Terang</span></button>
           </div>
-        </div>
-
-        <div class="sec">
-          <h3>Wallpaper chat</h3>
+          <div class="hr"></div>
+          <div class="lbl">Wallpaper chat</div>
           <div class="walls" id="walls"></div>
           <div class="row">
-            <button class="btn alt" id="wallPick" type="button">Dari galeri</button>
-            <button class="btn alt" id="wallReset" type="button">Reset</button>
+            <button class="btn alt sm" id="wallPick" type="button">Dari galeri</button>
+            <button class="btn alt sm" id="wallReset" type="button">Reset</button>
           </div>
           <input type="file" id="wallFile" accept="image/*" hidden>
-          <p class="note">Wallpaper dan tema tersimpan di perangkat ini saja.</p>
+          <p class="note">Tema dan wallpaper tersimpan di perangkat ini saja.</p>
         </div>
 
-        <div class="sec">
+        <div class="gt">Akun</div>
+        <div class="pcard">
           <button class="btn danger" id="btnLogout" type="button">Keluar dari akun</button>
         </div>
 
-        <div class="sec" style="border-bottom:0">
-          <button class="fbbox" id="fbBox" type="button">
-            <div class="fbt">Punya ide atau nemu yang kurang pas?</div>
-            <div class="fbs">Ceritakan ke kami. Saranmu dibaca langsung oleh developer dan membantu Talvo jadi makin baik.</div>
-            <div class="fbgo">Tulis saran &rarr;</div>
-          </button>
-          <button class="btn alt" id="devBtn" type="button" style="display:none;margin-top:12px">Kotak saran masuk (developer)</button>
-        </div>
+        <div class="gt">Bantuan</div>
+        <button class="fbbox" id="fbBox" type="button">
+          <span class="fbi"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/><path d="M8.5 11h7M8.5 14.5h4"/></svg></span>
+          <span class="fbm"><b class="fbt">Punya ide atau nemu yang kurang pas?</b><span class="fbs">Ceritakan ke kami. Saranmu dibaca langsung oleh developer dan membantu Talvo jadi makin baik.</span></span>
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:none;color:var(--sub)"><path d="M9 5l7 7-7 7"/></svg>
+        </button>
+        <button class="btn alt" id="devBtn" type="button" style="display:none;margin-top:12px;width:100%">Kotak saran masuk (developer)</button>
       </div>
     </section>
   </div>
@@ -489,6 +576,18 @@ textarea.field{min-height:150px;resize:vertical;font-family:ui-monospace,monospa
     </div>
   </div>
 
+  <div class="ovl" id="cfModal">
+    <div class="card">
+      <h3>Hapus kontak?</h3>
+      <p class="note" id="cfText" style="font-size:14px;color:var(--txt)"></p>
+      <p class="note">Dia akan diberi tahu bahwa kontaknya dihapus atau diblokir. Kamu bisa menambahkannya lagi lewat username.</p>
+      <div class="row">
+        <button class="btn alt" id="cfCancel" type="button">Batal</button>
+        <button class="btn dangerfill" id="cfOk" type="button">Hapus</button>
+      </div>
+    </div>
+  </div>
+
   <div class="ovl" id="devModal">
     <div class="card" style="max-height:85%;display:flex;flex-direction:column">
       <h3>Saran masuk</h3>
@@ -509,7 +608,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/fireba
 import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut }
   from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager,
-  collection, doc, getDoc, setDoc, writeBatch, query, where, orderBy, limitToLast, onSnapshot, serverTimestamp, getDocs, limit, deleteDoc }
+  collection, doc, getDoc, setDoc, writeBatch, query, where, orderBy, limitToLast, onSnapshot, serverTimestamp, getDocs, limit, deleteDoc, updateDoc, deleteField }
   from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
 const $ = s => document.querySelector(s);
@@ -536,21 +635,28 @@ function toast(msg){
 }
 
 /* ---------- Ikon aplikasi ---------- */
-const ICON_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3b82f6"/><stop offset="1" stop-color="#8b5cf6"/></linearGradient></defs><rect width="512" height="512" rx="120" fill="url(#g)"/><path d="M256 104c-86 0-156 58-156 130 0 40 21 76 55 100l-13 62 72-33c14 3 28 5 42 5 86 0 156-58 156-130S342 104 256 104z" fill="#fff"/><path d="M152 234h52c10 0 14-38 28-38s14 76 28 76 14-38 26-38h72" fill="none" stroke="#5b4be8" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const ICON_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="112" fill="#2f6fed"/><path d="M256 104c-86 0-156 58-156 130 0 40 21 76 55 100l-13 62 72-33c14 3 28 5 42 5 86 0 156-58 156-130S342 104 256 104z" fill="#fff"/><path d="M184 218h144M184 262h92" fill="none" stroke="#2f6fed" stroke-width="22" stroke-linecap="round"/></svg>';
 // Logo Mannect (Pulse): gelombang sinyal dengan dua titik ujung
-const MANNECT_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><defs><radialGradient id="bg" cx="50%" cy="30%" r="85%"><stop offset="0" stop-color="#17255a"/><stop offset="1" stop-color="#060a18"/></radialGradient><linearGradient id="ln" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22d3ee"/><stop offset="1" stop-color="#8b5cf6"/></linearGradient><filter id="gl" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="9" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><circle cx="256" cy="256" r="256" fill="url(#bg)"/><path d="M62 256H138C158 256 164 176 190 176C216 176 220 336 256 336C292 336 296 176 322 176C348 176 354 256 374 256H450" fill="none" stroke="url(#ln)" stroke-width="22" stroke-linecap="round" stroke-linejoin="round" filter="url(#gl)"/><circle cx="62" cy="256" r="17" fill="#fff"/><circle cx="450" cy="256" r="17" fill="#fff"/></svg>';
+const MANNECT_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><circle cx="256" cy="256" r="256" fill="#1e293b"/><path d="M82 256H150C168 256 172 186 196 186C220 186 224 326 256 326C288 326 292 186 316 186C340 186 344 256 362 256H430" fill="none" stroke="#fff" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const MANNECT_LOGO = "data:image/svg+xml," + encodeURIComponent(MANNECT_SVG);
 const ICON = "data:image/svg+xml," + encodeURIComponent(ICON_SVG);
 try { document.querySelector("link[rel=icon]").href = ICON; } catch {}
 document.querySelectorAll(".js-icon").forEach(i => { i.src = ICON; });
 
 /* ---------- Tema gelap / terang ---------- */
+let themeInit = false, themeTimer;
 function applyTheme(t){
   if (t !== "light") t = "dark";
-  document.documentElement.setAttribute("data-theme", t);
+  const root = document.documentElement;
+  if (themeInit){
+    root.classList.add("theming"); clearTimeout(themeTimer);
+    themeTimer = setTimeout(() => root.classList.remove("theming"), 450);
+  }
+  themeInit = true;
+  root.setAttribute("data-theme", t);
   lsSet("chatku_theme", t);
   const m = document.querySelector('meta[name="theme-color"]');
-  if (m) m.setAttribute("content", t === "light" ? "#f1f4fb" : "#05070d");
+  if (m) m.setAttribute("content", t === "light" ? "#ffffff" : "#14181d");
   $("#thDark").classList.toggle("on", t === "dark");
   $("#thLight").classList.toggle("on", t === "light");
 }
@@ -606,9 +712,17 @@ service cloud.firestore {
       return request.auth.token.email.split('@')[0];
     }
 
-    // true jika dua username sudah berteman (ada dokumen chat di antara mereka)
-    function chatBetween(a, b) {
-      return exists(/databases/$(database)/documents/chats/$(a < b ? a + '~' + b : b + '~' + a));
+    // true jika pihak lawan chat ini sudah menghapus atau memblokir pengguna saat ini
+    function otherGone(cid) {
+      let c = get(/databases/$(database)/documents/chats/$(cid)).data;
+      return (c.members[0] == uname() ? c.members[1] : c.members[0]) in c.get('gone', {});
+    }
+
+    // true jika viewer boleh melihat story milik owner (sudah berteman dan tidak dihapus owner)
+    function canSee(owner, viewer) {
+      let cid = owner < viewer ? owner + '~' + viewer : viewer + '~' + owner;
+      return exists(/databases/$(database)/documents/chats/$(cid))
+        && !(owner in get(/databases/$(database)/documents/chats/$(cid)).data.get('gone', {}));
     }
 
     match /users/{username} {
@@ -635,7 +749,9 @@ service cloud.firestore {
 
       allow update: if request.auth != null
         && uname() in resource.data.members
-        && request.resource.data.members == resource.data.members;
+        && request.resource.data.members == resource.data.members
+        && request.resource.data.get('gone', {}).diff(resource.data.get('gone', {})).affectedKeys().hasOnly([uname()])
+        && request.resource.data.get('reads', {}).diff(resource.data.get('reads', {})).affectedKeys().hasOnly([uname()]);
 
       allow delete: if false;
 
@@ -645,6 +761,7 @@ service cloud.firestore {
 
         allow create: if request.auth != null
           && uname() in get(/databases/$(database)/documents/chats/$(chatId)).data.members
+          && !otherGone(chatId)
           && request.resource.data.from == uname()
           && request.resource.data.text is string
           && request.resource.data.text.size() <= 2000
@@ -661,6 +778,7 @@ service cloud.firestore {
 
         allow create: if request.auth != null
           && uname() in get(/databases/$(database)/documents/chats/$(chatId)).data.members
+          && !otherGone(chatId)
           && request.resource.data.from == uname()
           && request.resource.data.data is string
           && request.resource.data.data.size() < 900000;
@@ -671,7 +789,7 @@ service cloud.firestore {
 
     match /stories/{sid} {
       allow read: if request.auth != null
-        && (resource.data.owner == uname() || chatBetween(resource.data.owner, uname()));
+        && (resource.data.owner == uname() || canSee(resource.data.owner, uname()));
 
       allow create: if request.auth != null
         && request.resource.data.owner == uname()
@@ -689,7 +807,7 @@ service cloud.firestore {
         allow create: if request.auth != null
           && uname() == viewer
           && get(/databases/$(database)/documents/stories/$(sid)).data.owner != uname()
-          && chatBetween(get(/databases/$(database)/documents/stories/$(sid)).data.owner, uname());
+          && canSee(get(/databases/$(database)/documents/stories/$(sid)).data.owner, uname());
         allow read: if request.auth != null
           && get(/databases/$(database)/documents/stories/$(sid)).data.owner == uname();
         allow update, delete: if false;
@@ -777,6 +895,12 @@ function resizeImage(file, size, quality, square){
     img.src = url;
   });
 }
+
+const TICKS = {
+  wait: '<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6"/><path d="M8 4.6V8l2.3 1.4"/></svg>',
+  sent: '<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.2 8.6l3 3L12.8 5"/></svg>',
+  read: '<svg viewBox="0 0 20 16" width="18" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1.8 8.6l3 3L11.4 5M8.4 11.2l.4.4L17.4 5"/></svg>'
+};
 
 function boot(cfg){
   const app = initializeApp(cfg);
@@ -947,8 +1071,11 @@ function boot(cfg){
   });
 
   /* ----- daftar chat ----- */
+  let lastMsgSnap = null, lastMsgId = null;
+  const lastSeenAt = new Map(), goneSeen = new Map(), readReq = new Map();
   function startChatList(){
     if (unsubChats) unsubChats();
+    lastSeenAt.clear(); goneSeen.clear(); readReq.clear();
     const q = query(collection(db, "chats"), where("members", "array-contains", me));
     unsubChats = onSnapshot(q, snap => {
       chats = snap.docs.map(d => ({ id: d.id, ...d.data({ serverTimestamps: "estimate" }) }));
@@ -956,13 +1083,35 @@ function boot(cfg){
       chats.forEach(c => { const o = c.members.find(m => m !== me); if (o){ watchProfile(o); watchStories(o); } });
       renderList();
       snap.docChanges().forEach(ch => {
+        const c = ch.doc.data({ serverTimestamps: "estimate" }), cid = ch.doc.id;
+        const other = (c.members || []).find(m => m !== me);
+        const la = tsMs(c.lastAt) || 0, wasLa = lastSeenAt.get(cid), wasGone = goneSeen.get(cid);
+        const gone = !!(c.gone && other && c.gone[other]);
+        lastSeenAt.set(cid, la); goneSeen.set(cid, gone);
         if (ch.type !== "modified") return;
-        const c = ch.doc.data();
-        if (!c.lastFrom || c.lastFrom === me) return;
-        const viewing = currentOther && chatId(me, currentOther) === ch.doc.id && !document.hidden;
-        if (!viewing) notify(dispName(c.lastFrom), c.lastMessage || "Pesan baru");
+        const viewing = currentOther && chatId(me, currentOther) === cid && !document.hidden;
+        if (!viewing && c.lastFrom && c.lastFrom !== me && la && la !== wasLa) notify(dispName(c.lastFrom), c.lastMessage || "Pesan baru");
+        if (gone && !wasGone && other) notify(dispName(other), "Menghapus atau memblokir kontakmu");
       });
+      if (currentOther && currentOther !== AI_ID){
+        fillChatHeader();
+        if (lastMsgSnap) renderMessages(lastMsgSnap, lastMsgId);
+      }
     }, err => { if (err.code === "permission-denied") toast("Aturan Firestore belum dipasang."); });
+  }
+
+  function markReadRemote(id, snap){
+    const cd = chats.find(c => c.id === id); if (!cd) return;
+    let inc = 0;
+    snap.docs.forEach(d => {
+      const m = d.data({ serverTimestamps: "estimate" });
+      if (m.from !== me && !d.metadata.hasPendingWrites) inc = Math.max(inc, tsMs(m.createdAt) || m.clientAt || 0);
+    });
+    if (!inc) return;
+    const have = tsMs((cd.reads || {})[me]) || 0;
+    if (inc <= have || (readReq.get(id) || 0) >= inc) return;
+    readReq.set(id, inc);
+    updateDoc(doc(db, "chats", id), { ["reads." + me]: serverTimestamp() }).catch(() => {});
   }
 
   function renderList(){
@@ -970,7 +1119,7 @@ function boot(cfg){
     const box = $("#chatList"); box.textContent = "";
     box.append(aiListItem());
     box.append(el("div", "sect", "Obrolan"));
-    const rows = chats.map(c => {
+    const rows = chats.filter(c => !(c.gone && c.gone[me])).map(c => {
       const other = c.members.find(m => m !== me) || me;
       const last = tsMs(c.lastAt) || tsMs(c.createdAt) || 0;
       const unread = c.lastFrom && c.lastFrom !== me && last > getRead(c.id);
@@ -986,7 +1135,8 @@ function boot(cfg){
       const av = el("div", "av"); avatar(av, other);
       const mid = el("div", "mid");
       mid.append(el("div", "name", dispName(other)));
-      mid.append(el("div", "prev", c.lastMessage ? (c.lastFrom === me ? "Kamu: " : "") + c.lastMessage : "Belum ada pesan"));
+      const removedMe = !!(c.gone && c.gone[other]);
+      mid.append(el("div", "prev" + (removedMe ? " warn" : ""), removedMe ? "Menghapus atau memblokir kontakmu" : (c.lastMessage ? (c.lastFrom === me ? "Kamu: " : "") + c.lastMessage : "Belum ada pesan")));
       const right = el("div", "right");
       right.append(el("span", "", last ? listTime(last) : ""));
       if (unread) right.append(el("span", "dot"));
@@ -1014,6 +1164,8 @@ function boot(cfg){
       const snap = await getDoc(doc(db, "users", other));
       if (!snap.exists()){ err.textContent = "Username tidak ditemukan."; $("#addOk").disabled = false; return; }
       const members = [me, other].sort();
+      const prevChat = chats.find(c => c.id === members.join("~"));
+      if (prevChat && prevChat.gone && prevChat.gone[me]) await updateDoc(doc(db, "chats", prevChat.id), { ["gone." + me]: deleteField() });
       await setDoc(doc(db, "chats", members.join("~")), { members, createdAt: serverTimestamp() }, { merge: true });
       closeModal();
       openChat(other);
@@ -1288,9 +1440,11 @@ function boot(cfg){
       $("#chatName").textContent = "Mannect";
       $("#chatSub").textContent = "Asisten AI \u00B7 tanya apa saja";
       $("#aiClear").style.display = "";
+      $("#chatMenu").style.display = "none";
       return;
     }
     $("#aiClear").style.display = "none";
+    $("#chatMenu").style.display = "";
     chatAv.className = "av";
     avatar($("#chatAv"), currentOther);
     $("#chatName").textContent = dispName(currentOther);
@@ -1310,7 +1464,7 @@ function boot(cfg){
     unsubMsgs = onSnapshot(q, { includeMetadataChanges: true }, snap => renderMessages(snap, id));
   }
   function leaveChat(){
-    cancelRec(); stopPlayback(); $("#attMenu").classList.remove("show");
+    cancelRec(); stopPlayback(); $("#attMenu").classList.remove("show"); $("#cmenu").classList.remove("show"); lastMsgSnap = null;
     if (unsubMsgs){ unsubMsgs(); unsubMsgs = null; }
     currentOther = null;
     showScreen("list");
@@ -1325,6 +1479,9 @@ function boot(cfg){
   });
 
   function renderMessages(snap, id){
+    lastMsgSnap = snap; lastMsgId = id;
+    const cdoc = chats.find(c => c.id === id) || {};
+    const otherRead = currentOther ? (tsMs((cdoc.reads || {})[currentOther]) || 0) : 0;
     const box = $("#msgs");
     const nearBottom = box.scrollHeight - box.scrollTop - box.clientHeight < 100;
     const first = !box.dataset.ready;
@@ -1342,12 +1499,20 @@ function boot(cfg){
       const row = el("div", "msg " + (mine ? "me" : "them"));
       row.append(buildBody(m, d.id));
       if (m.kind === "image" || m.kind === "audio" || m.kind === "file") row.classList.add("has-media");
-      row.append(el("span", "meta", fmtTime(ms) + (mine ? (d.metadata.hasPendingWrites ? " \u{1F553}" : " ✓") : "")));
+      const meta = el("span", "meta");
+      meta.append(el("span", "mt", fmtTime(ms)));
+      if (mine){
+        const st = d.metadata.hasPendingWrites ? "wait" : (otherRead && ms <= otherRead ? "read" : "sent");
+        const tk = el("span", "tick " + st); tk.innerHTML = TICKS[st];
+        tk.setAttribute("aria-label", st === "wait" ? "Belum terkirim" : st === "read" ? "Dibaca" : "Terkirim");
+        meta.append(tk);
+      }
+      row.append(meta);
       box.append(row);
     });
     box.dataset.ready = "1";
     if (first || nearBottom || lastMine) box.scrollTop = box.scrollHeight;
-    if (!document.hidden) setRead(id, newest);
+    if (!document.hidden){ setRead(id, newest); markReadRemote(id, snap); }
   }
 
   /* ----- kirim pesan ----- */
@@ -1381,7 +1546,10 @@ function boot(cfg){
   }
 
   document.addEventListener("visibilitychange", () => {
-    if (!document.hidden && currentOther && currentOther !== AI_ID) setRead(chatId(me, currentOther));
+    if (!document.hidden && currentOther && currentOther !== AI_ID){
+      setRead(chatId(me, currentOther));
+      if (lastMsgSnap) markReadRemote(chatId(me, currentOther), lastMsgSnap);
+    }
   });
 
   /* ----- media: pesan suara, foto, file ----- */
@@ -1640,6 +1808,11 @@ function boot(cfg){
   /* ----- tombol komposer: kirim, suara, lampiran ----- */
   function syncComposer(){
     const ai = currentOther === AI_ID;
+    const cd = (currentOther && !ai) ? chats.find(c => c.id === chatId(me, currentOther)) : null;
+    const removedMe = !!(cd && cd.gone && cd.gone[currentOther]);
+    composer.classList.toggle("nosend", removedMe);
+    $("#goneBar").classList.toggle("show", removedMe);
+    if (removedMe) $("#goneTxt").textContent = dispName(currentOther) + " menghapus atau memblokir kontakmu. Kamu tidak bisa mengirim pesan lagi.";
     const has = input.value.trim().length > 0;
     $("#attachBtn").style.display = ai ? "none" : "";
     $("#micBtn").style.display = (ai || has) ? "none" : "";
@@ -1678,7 +1851,7 @@ function boot(cfg){
       });
       storyMap.set(u, list.filter(x => typeof x.expiresAt === "number" && x.expiresAt > Date.now()).sort((a, b) => sTime(a) - sTime(b)));
       storyErr = false; renderStories();
-    }, err => { if (err.code === "permission-denied"){ storyErr = true; renderStories(); } });
+    }, err => { if (err.code === "permission-denied"){ if (u === me) storyErr = true; else storyMap.set(u, []); renderStories(); } });
     storyUnsubs.set(u, unsub);
   }
   function clearStories(){
@@ -1702,7 +1875,8 @@ function boot(cfg){
   function renderStories(){
     if (!me) return;
     const seen = seenSet();
-    const friends = [...storyMap.keys()].filter(u => u !== me && activeStories(u).length);
+    const vis = new Set(chats.filter(c => !(c.gone && c.gone[me])).map(c => c.members.find(m => m !== me)));
+    const friends = [...storyMap.keys()].filter(u => u !== me && vis.has(u) && activeStories(u).length);
     const unseenF = friends.filter(u => activeStories(u).some(x => !seen[x.id]));
     $("#navDot").style.display = unseenF.length ? "block" : "none";
     if (tab !== "stories") return;
@@ -1909,6 +2083,26 @@ function boot(cfg){
     V.panel = true; $("#stPanel").classList.add("show");
   };
   $("#stPClose").onclick = () => { V.panel = false; $("#stPanel").classList.remove("show"); };
+
+  /* ----- hapus kontak ----- */
+  const cmenu = $("#cmenu");
+  $("#chatMenu").onclick = e => { e.stopPropagation(); cmenu.classList.toggle("show"); };
+  document.addEventListener("click", () => cmenu.classList.remove("show"));
+  $("#cmDel").onclick = () => {
+    if (!currentOther || currentOther === AI_ID) return;
+    $("#cfText").textContent = dispName(currentOther) + " (@" + currentOther + ") akan dihapus dari daftar obrolanmu dan tidak bisa lagi mengirim pesan ke kamu.";
+    $("#cfModal").classList.add("show");
+  };
+  $("#cfCancel").onclick = () => $("#cfModal").classList.remove("show");
+  $("#cfOk").onclick = () => {
+    const other = currentOther;
+    $("#cfModal").classList.remove("show");
+    if (!other || other === AI_ID) return;
+    updateDoc(doc(db, "chats", chatId(me, other)), { ["gone." + me]: Date.now() })
+      .catch(e => toast(e.code === "permission-denied" ? "Ditolak server. Perbarui aturan Firestore ke versi terbaru." : "Gagal menghapus kontak."));
+    toast("Kontak dihapus.");
+    history.back();
+  };
 
   /* ----- panel developer: hanya untuk akun @salman ----- */
   const DEV = "salman";
